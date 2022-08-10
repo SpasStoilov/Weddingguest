@@ -24,3 +24,44 @@ main{
 .Logged > a, .Guest > a {
     margin: 20px;
 }
+
+.event-root-container {
+    position: relative;
+    width: 800px;
+   
+}
+
+.event-conteiner{
+    display: inline-flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 200px;
+    height: 350px;
+    margin: 3.8%;
+    border-radius: 15px;
+    box-shadow: 0px 0px 10px rgb(129, 129, 129); 
+    border: none;
+}
+
+.event-img {
+    width: 160;
+    height: 160px;
+    object-fit: cover;
+    border-radius: 50%;
+
+}
+
+.event-title{
+    margin: 20px;
+    word-break: break-all;
+    text-align: center;
+}
+
+.event-detail-button-link{
+    text-decoration: none;
+    padding: 6px 25px 6px 25px;
+    background-color: rgb(131, 68, 190);
+    color: white;
+    border-radius: 20px;
+}

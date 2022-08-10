@@ -5,6 +5,7 @@ import { CreateEvents } from "./CreateEvents";
 import { LogOut } from './LogOut'
 import { Register } from './Register';
 import { LogIn } from './LogIn';
+import { EventDetails } from './EventDetails';
 
 export function Main() {
     return (
@@ -15,6 +16,7 @@ export function Main() {
                 <Route path='/logout' element={<LogOut/>}/>
                 <Route path='/register' element={<Register/>}/>
                 <Route path='/login' element={<LogIn/>}/>
+                <Route path='/myevents/event/details/:eventId' element={<EventDetails/>}/>
             </Routes>
         </main>
     );
