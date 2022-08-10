@@ -40,7 +40,7 @@ function MultiCard(props){
         e.preventDefault()
 
         if (props.inMenu.getAll.length > 1) {
-            let titleToRemove = e.target.parentElement.querySelector('input').getAttribute('name')
+            let titleToRemove = e.target.parentElement.parentElement.querySelector('input').getAttribute('name')
             newList = newList.filter(obj => (obj.title + props.flagType) !== titleToRemove)
             props.inMenu.editThem(newList)
         }
@@ -65,8 +65,10 @@ function MultiCard(props){
         <div className={props.flagType}>
             <input name={props.title + props.flagType} defaultValue={props.title} type="text"/>
             <textarea name={props.title + props.flagType + "-recepie"} defaultValue={props.recepie}></textarea>
-            <button className="event-detail-body-actions-delete" onClick={onDelete}>Delete</button>
-            <button className="event-detail-body-actions-add" onClick={onAdd}>Add</button>
+            <div className="event-meals-types-actions">
+                <button className="event-detail-body-actions-delete" onClick={onDelete}>Delete</button>
+                <button className="event-detail-body-actions-add" onClick={onAdd}>Add</button>
+            </div>
         </div>
     )
 }
@@ -89,35 +91,35 @@ export function FoodDrinks(){
 
         <form className="event-detail-form-FoodDrinks">
 
-            <h2>Salads</h2>
+            <h1>Salads</h1>
             <div className="event-detail-body-Salads">
                 {
                     saladList.map(obj => <MultiCard key={obj._id} title={obj.title} inMenu={saladEditObj} recepie={obj.recepie} flagType="-Salad" mark="S"/>)
                 }
             </div>
 
-            <h2>Appetizers</h2>
+            <h1>Appetizers</h1>
             <div className="event-detail-body-Appetizers">
                 {
                     appetizerList.map(obj => <MultiCard key={obj._id} title={obj.title} inMenu={appetizerEditObj} recepie={obj.recepie} flagType="-Appetizer" mark="A"/>)
                 }
             </div>
 
-            <h2>MainMeals</h2>
+            <h1>Main Meals</h1>
             <div className="event-detail-body-MainMeals">
                 {
                     mainList.map(obj => <MultiCard key={obj._id} title={obj.title} inMenu={mainEditObj} recepie={obj.recepie} flagType="-Main" mark="M"/>)
                 }
             </div>
             
-            <h2>Deserts</h2>
+            <h1>Deserts</h1>
             <div className="event-detail-body-Deserts">
                 {
                     desertList.map(obj => <MultiCard key={obj._id} title={obj.title} inMenu={desertEditObj} recepie={obj.recepie} flagType="-Desert" mark="D"/>)
                 }
             </div>
 
-            {/* <h2>Alcoholic Drinks</h2>
+            {/* <h1>Alcoholic Drinks</h1>
             <div className="event-detail-body-Alcohol">
 
                 <div>
@@ -126,7 +128,7 @@ export function FoodDrinks(){
                 </div>
             </div>
 
-            <h2>Soft Drinks</h2>
+            <h1>Soft Drinks</h1>
             <div className="event-detail-body-Soft">
 
                 <div>

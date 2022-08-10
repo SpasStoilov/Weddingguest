@@ -31,7 +31,7 @@ main{
    
 }
 
-.event-conteiner{
+.event-conteiner {
     display: inline-flex;
     flex-direction: column;
     justify-content: center;
@@ -58,10 +58,90 @@ main{
     text-align: center;
 }
 
+
 .event-detail-button-link{
     text-decoration: none;
     padding: 6px 25px 6px 25px;
     background-color: rgb(131, 68, 190);
     color: white;
     border-radius: 20px;
+}
+
+.event-detail-head {
+    display: inline-flex;
+    flex-direction: row;
+    border: none;
+}
+
+.event-detail-head-img, .event-detail-head-headers{
+    margin: 20px;
+    border: none;
+}
+
+.event-detail-body{
+    display: flex;
+    width: 950px;
+    justify-content: center;
+}
+
+.event-detail-form-FoodDrinks > h1{
+    margin-left: 20px;
+}
+
+.event-detail-body-Salads,
+.event-detail-body-Appetizers,
+.event-detail-body-MainMeals,
+.event-detail-body-Deserts,
+.-Desert, .-Main, .-Appetizer, .-Salad {
+    display: inline-flex;
+    flex-direction: column;
+    margin: 20px;
+    
+}
+
+.-Desert, .-Main, .-Appetizer, .-Salad {
+    padding: 10px 25px 0px 25px;
+    border-radius: 20px;
+    border: none;
+    box-shadow: 0px 0px 10px rgb(129, 129, 129); 
+}
+
+.-Desert > textarea, 
+.-Main > textarea, 
+.-Appetizer > textarea, 
+.-Salad > textarea {
+    width: 800px;
+    font-size: 18px;
+    font-style: italic;
+    border-radius: 7px;
+    text-indent: 5px;
+    border: 2px solid rgb(219, 219, 219);
+}
+
+.-Desert > input[type=text], 
+.-Main > input[type=text], 
+.-Appetizer > input[type=text], 
+.-Salad > input[type=text] {
+    height: 50px;
+    font-size: large;
+    border: none;
+    border-radius: 7px;
+    font-weight: bold;
+    background: none;
+}
+
+.event-meals-types-actions > button {
+    height: 25px;
+    width: 100px;
+    margin: 10px;
+    border-radius: 10px;
+    border: 2px solid rgb(219, 219, 219);
+    background: none;
+}
+
+.event-meals-types-actions{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    border: none;
 }
