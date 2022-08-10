@@ -6,6 +6,10 @@ import { LogOut } from './LogOut'
 import { Register } from './Register';
 import { LogIn } from './LogIn';
 import { EventDetails } from './EventDetails';
+import { FoodDrinks } from './FoodDrinks';
+import { Locations } from './Locations';
+import { GuestsHints } from './GuestsHints';
+import { Guests } from './Guests';
 
 export function Main() {
     return (
@@ -16,7 +20,16 @@ export function Main() {
                 <Route path='/logout' element={<LogOut/>}/>
                 <Route path='/register' element={<Register/>}/>
                 <Route path='/login' element={<LogIn/>}/>
-                <Route path='/myevents/event/details/:eventId' element={<EventDetails/>}/>
+
+                <Route path='/myevents/event/details/' element={<EventDetails/>}>
+
+                    <Route path='fooddrinks/:eventId' element={<FoodDrinks/>}/>
+                    <Route path='locations/:eventId' element={<Locations/>}/>
+                    <Route path='guest/hints/:eventId' element={<GuestsHints/>}/>
+                    <Route path='guest/:eventId' element={<Guests/>}/>
+
+                </Route>
+
             </Routes>
         </main>
     );
