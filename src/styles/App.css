@@ -1,0 +1,26 @@
+main{
+    display: flex;
+    justify-content: center;
+}
+
+.login-form, .register-form {
+    display: inline-flex;
+    align-items: center;
+    flex-direction: column;
+}
+.login-form > input, .register-form > input{
+    margin: 10px;
+    width: 350px;
+    height: 40px;
+
+}
+
+.Logged, .Guest {
+    display: flex;
+    justify-content: flex-end;
+    background-color: rgb(226, 226, 226);
+}
+
+.Logged > a, .Guest > a {
+    margin: 20px;
+}
