@@ -14,7 +14,7 @@ let dataMainMeal = [
     {_id: 'M-0', title:'M-0', recepie: 'Recepie here...', vote: ''},
 ]
 
-let dataDesert = [
+let dataAfterMeal = [
     {_id: 'D-0', title:'D-0', recepie: 'Recepie here...', vote: ''},
 ]
 
@@ -31,24 +31,24 @@ export function CreateEvents() {
     let [saladList, editSaladList] = useState(dataSalads)
     let [appetizerList, editAppetizerList] = useState(dataAppetizers)
     let [mainList, editMainList] = useState(dataMainMeal)
-    let [desertList, editDesertList] = useState(dataDesert)
+    let [afterMealsList, editAfterMealsList] = useState(dataAfterMeal)
     let [alcoholList, editAlcoholList] = useState(dataAlcohol)
     let [softList, editSoftList] = useState(dataSoft)
 
     let saladEditObj = { getAll: saladList, editThem: editSaladList}
     let appetizerEditObj = { getAll: appetizerList, editThem: editAppetizerList}
     let mainEditObj = { getAll: mainList, editThem: editMainList}
-    let desertEditObj = { getAll: desertList, editThem: editDesertList}
+    let afterMealsEditObj = { getAll: afterMealsList, editThem: editAfterMealsList}
     let alcoholEditObj = { getAll: alcoholList, editThem: editAlcoholList}
     let softEditObj = { getAll: softList, editThem: editSoftList}
 
     let Menu = [
-        {Title: 'Salads', NameOfClass: 'event-create-Salads', listItems: saladList, Editor: saladEditObj, Flag: "-Salad", Mark: "S"},
-        {Title: 'Appetizers', NameOfClass: 'event-create-Appetizers', listItems: appetizerList, Editor: appetizerEditObj, Flag: "-Appetizer", Mark: "A"},
-        {Title: 'Main Meals', NameOfClass: 'event-create-MainMeals', listItems: mainList, Editor: mainEditObj, Flag: "-Main", Mark: "M"},
-        {Title: 'Deserts', NameOfClass: 'event-create-Deserts', listItems: desertList, Editor: desertEditObj, Flag: "-Desert", Mark: "D"},
-        {Title: 'Alcoholic Drinks', NameOfClass: 'event-create-Alcohol', listItems: alcoholList, Editor: alcoholEditObj, Flag: "-Alcohol", Mark: "L"},
-        {Title: 'Soft Drinks', NameOfClass: 'event-create-Soft', listItems: softList, Editor: softEditObj, Flag: "-Soft", Mark: "F"}
+        {Title: 'Salads', NameOfClass: 'event-detail-body-Salads', listItems: saladList, Editor: saladEditObj, Flag: "-Salad", Mark: "S"},
+        {Title: 'Appetizers', NameOfClass: 'event-detail-body-Appetizers', listItems: appetizerList, Editor: appetizerEditObj, Flag: "-Appetizer", Mark: "A"},
+        {Title: 'Main Meals', NameOfClass: 'event-detail-body-MainMeals', listItems: mainList, Editor: mainEditObj, Flag: "-Main", Mark: "M"},
+        {Title: 'After Meals', NameOfClass: 'event-detail-body-afterMeals', listItems: afterMealsList, Editor: afterMealsEditObj, Flag: "-After", Mark: "D"},
+        {Title: 'Alcoholic Drinks', NameOfClass: 'event-detail-body-Alcohol', listItems: alcoholList, Editor: alcoholEditObj, Flag: "-Alcohol", Mark: "L"},
+        {Title: 'Soft Drinks', NameOfClass: 'event-detail-body-Soft', listItems: softList, Editor: softEditObj, Flag: "-Soft", Mark: "F"}
     ]
 
     function LoadFile(e){

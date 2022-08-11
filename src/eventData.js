@@ -1,10 +1,7 @@
 // event Data for One Owner:
 
 let dataSalads = [
-    {_id: '455461', title:'Title1', recepie: 'SRecepie1', vote: '2'},
-    {_id: '24444', title:'Title2', recepie: 'SRecepie2', vote: '100'},
-    // {_id: 'S-0', title:'S-0', recepie: 'Recepie here...', vote: ''},
-    // {_id: 'S-1', title:'S-1', recepie: 'Recepie here...', vote: ''}
+    {_id: 'S-0', title:'S-0', recepie: 'Recepie here...', vote: ''},
 ]
 
 let dataAppetizers = [
@@ -21,7 +18,7 @@ let dataMainMeal = [
     // {_id: 'M-1', title:'M-1', recepie: 'Recepie here...', vote: ''}
 ]
 
-let dataDesert = [
+let dataAfterMeal = [
     {_id: 'fdnhnnfdfd', title:'Title1', recepie: 'DRecepie1', vote: '0'},
     {_id: 'aaannnsss', title:'Title2', recepie: 'DRecepie2', vote: '50'},
     // {_id: 'D-0', title:'D-0', recepie: 'Recepie here...', vote: ''},
@@ -51,7 +48,7 @@ let event = {
     salads: dataSalads,
     appetizers: dataAppetizers,
     mains: dataMainMeal,
-    deserts: dataDesert,
+    afterMeals: dataAfterMeal,
     alcohols: dataAlcohol,
     softs: dataSoft,
     locations: {addres:"Some Text Addres...."},
@@ -64,10 +61,10 @@ let event2 = {
     ownerId: "sdfsjkfkjsfkjsdfjksdfjksdfkjsf",
     title: "My Wedding Title-2",
     imageUrl: "https://www.magenboys.com/images/photo_galleries/gallery/large_1382114157.jpg",
-    salads: [],
+    salads: dataSalads,
     appetizers: dataAppetizers,
     mains: dataMainMeal,
-    deserts: dataDesert,
+    afterMeals: dataAfterMeal,
     alcohols: dataAlcohol,
     softs: dataSoft,
     locations: {addres:"Some Text Addres...."},
