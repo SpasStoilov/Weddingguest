@@ -1,5 +1,6 @@
 import { MultiCard } from "./FoodDrinks";
-import { useState } from "react"
+import { useState, useEffect } from "react"
+import { formDataFunc } from "../getFormData"
 
 let dataSalads = [
     {_id: 'S-0', title:'S-0', recepie: 'Recepie here...', vote: ''},
@@ -60,6 +61,23 @@ export function CreateEvents() {
         reader.readAsDataURL(e.target.files[0]);
     }
 
+    function onSubmitData (e) {
+        e.preventDefault();
+        console.log('hello Form!')
+        let dataFromForm = formDataFunc(e.currentTarget)
+        console.log(dataFromForm)
+    }
+
+    useEffect(() => {
+        console.log('hello useEffect!')
+        let formEl = document.querySelector('.creat-event-form')
+        formEl.addEventListener('submit', onSubmitData)
+
+        return () => {
+            formEl.removeEventListener('submit', onSubmitData)
+        };
+    })
+
     return (
         <form className="creat-event-form">
 
@@ -86,6 +104,7 @@ export function CreateEvents() {
 
                 })
             }
+            <input type="submit" className="event-create-btn" value="Create"/>
 
         </form>
     );
