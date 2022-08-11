@@ -45,7 +45,7 @@ main{
 }
 
 .event-img {
-    width: 160;
+    width: 160px;
     height: 160px;
     object-fit: cover;
     border-radius: 50%;
@@ -149,4 +149,45 @@ main{
     flex-direction: row;
     justify-content: center;
     border: none;
+}
+
+
+.creat-event-form {
+    margin-top: 20px;
+    display: inline-flex;
+    flex-direction: column;
+    width: 900px;
+}
+.event-create-headers-conteiner{
+    display: inline-flex;
+    align-items: center;
+}
+
+.event-create-title{
+    margin-left: 60px;
+    height: 50px;
+    width: 500px;
+    font-size: x-large;
+    text-indent: 10px;
+}
+
+.event-creat-form-imageUrl {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    background-color: antiquewhite;
+    cursor: pointer;
+
+    display: inline-block;
+    padding: 110px 40px 0px 80px;
+    cursor: pointer;
+}
+
+.event-create-locations,
+.event-create-hints {
+    margin-top: 20px;
+    font-size: 18px;
+    height: 100px;
+    text-indent: 10px;
+    font-style: italic;
 }

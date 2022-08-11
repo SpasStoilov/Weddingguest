@@ -8,6 +8,7 @@ import { allEvents } from './eventData';
 export const WeddingEventsContext = React.createContext()
 
 export function App() {
+    
     return (
         <BrowserRouter>
             <Navbar/>

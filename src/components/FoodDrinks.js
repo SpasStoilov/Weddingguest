@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom"
 import { useState, useContext } from "react"
 import { WeddingEventsContext } from "../App"
 
-function MultiCard(props){
+export function MultiCard(props){
 
     let [...newList] = props.inMenu.getAll
 

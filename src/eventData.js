@@ -1,4 +1,4 @@
-// event Data:
+// event Data for One Owner:
 
 let dataSalads = [
     {_id: '455461', title:'Title1', recepie: 'SRecepie1', vote: '2'},
@@ -46,7 +46,7 @@ let dataSoft = [
 let event = {
     _id: 'ivnIdxxxxxxx54656555665',
     ownerId: "sdfsjkfkjsfkjsdfjksdfjksdfkjsf",
-    title: "My Wedding Title",
+    title: "My Wedding Title-1",
     imageUrl: "https://www.magenboys.com/images/photo_galleries/gallery/large_1382114157.jpg",
     salads: dataSalads,
     appetizers: dataAppetizers,
@@ -59,4 +59,20 @@ let event = {
     hints: {hints:"Some Text Hints...."}
 }
 
-export let allEvents = [event]
+let event2 = {
+    _id: 'ivnId2xxxxxxx',
+    ownerId: "sdfsjkfkjsfkjsdfjksdfjksdfkjsf",
+    title: "My Wedding Title-2",
+    imageUrl: "https://www.magenboys.com/images/photo_galleries/gallery/large_1382114157.jpg",
+    salads: [],
+    appetizers: dataAppetizers,
+    mains: dataMainMeal,
+    deserts: dataDesert,
+    alcohols: dataAlcohol,
+    softs: dataSoft,
+    locations: {addres:"Some Text Addres...."},
+    guests: [],
+    hints: {hints:"Some Text Hints...."}
+}
+
+export let allEvents = [event, event2]
