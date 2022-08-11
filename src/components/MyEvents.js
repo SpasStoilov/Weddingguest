@@ -1,29 +1,27 @@
 import { Link } from "react-router-dom";
+import { useContext } from "react";
+import { WeddingEventsContext } from "../App";
+
+
+function EventCard({event}){
+    return (
+        <div className="event-conteiner">
+                <img className="event-img" src={event.imageUrl} alt="Event IMG"/>
+                <h3 className="event-title">{event.title}</h3>
+                <Link className="event-detail-button-link" to={"event/details/fooddrinks/" + event._id}>DETAILS</Link>
+        </div>
+    )
+}
 
 export function MyEvents() {
 
-    // here we must fetch all Events and atouch eventId to Link's at '/xxxx'
-
+    let allEvents = useContext(WeddingEventsContext)
+    
     return (
         <div className="event-root-container">
-
-            <div className="event-conteiner">
-                <img className="event-img" src="https://www.magenboys.com/images/photo_galleries/gallery/large_1382114157.jpg" alt="Event IMG"/>
-                <h3 className="event-title">My Wedding Title-HERE</h3>
-                <Link className="event-detail-button-link" to="event/details/fooddrinks/xxxx">DETAILS</Link>
-            </div>
-
-            <div className="event-conteiner">
-                <img className="event-img" src="https://www.magenboys.com/images/photo_galleries/gallery/large_1382114157.jpg" alt="Event IMG"/>
-                <h3 className="event-title">My Wedding Title-HERE</h3>
-                <Link className="event-detail-button-link" to="event/details/fooddrinks/xxxx">DETAILS</Link>
-            </div>
-            
-            <div className="event-conteiner">
-                <img className="event-img" src="https://www.magenboys.com/images/photo_galleries/gallery/large_1382114157.jpg" alt="Event IMG"/>
-                <h3 className="event-title">My Wedding Title-HERE</h3>
-                <Link className="event-detail-button-link" to="event/details/fooddrinks/xxxx">DETAILS</Link>
-            </div>
+            {
+                allEvents.map(event => <EventCard key={event._id} event={event}/>)
+            }
         </div>
     );
 }

@@ -84,7 +84,7 @@ main{
     justify-content: center;
 }
 
-.event-detail-form-FoodDrinks > h1{
+.event-detail-form-FoodDrinks > div > h1 {
     margin-left: 20px;
 }
 
@@ -92,14 +92,15 @@ main{
 .event-detail-body-Appetizers,
 .event-detail-body-MainMeals,
 .event-detail-body-Deserts,
-.-Desert, .-Main, .-Appetizer, .-Salad {
+.event-detail-body-Alcohol,
+.event-detail-body-Soft,
+.-Desert, .-Main, .-Appetizer, .-Salad, .-Alcohol, .-Soft {
     display: inline-flex;
     flex-direction: column;
     margin: 20px;
-    
 }
 
-.-Desert, .-Main, .-Appetizer, .-Salad {
+.-Desert, .-Main, .-Appetizer, .-Salad, .-Alcohol, .-Soft {
     padding: 10px 25px 0px 25px;
     border-radius: 20px;
     border: none;
@@ -121,7 +122,10 @@ main{
 .-Desert > input[type=text], 
 .-Main > input[type=text], 
 .-Appetizer > input[type=text], 
-.-Salad > input[type=text] {
+.-Salad > input[type=text],
+.-Alcohol > input[type=text], 
+.-Soft > input[type=text] {
+    width: 800px;
     height: 50px;
     font-size: large;
     border: none;
@@ -129,6 +133,7 @@ main{
     font-weight: bold;
     background: none;
 }
+
 
 .event-meals-types-actions > button {
     height: 25px;
@@ -139,7 +144,7 @@ main{
     background: none;
 }
 
-.event-meals-types-actions{
+.event-meals-types-actions {
     display: flex;
     flex-direction: row;
     justify-content: center;
