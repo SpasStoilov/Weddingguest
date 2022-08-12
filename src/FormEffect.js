@@ -1,13 +1,13 @@
 import { formDataFunc } from "./getFormData"
 
-export function FormEffect(classNameForm){
+export function FormEffect(classNameForm, method=null, path=null, token=null){
 
     let dataFromForm;
 
     function onSubmitData (e) {
         e.preventDefault();
         console.log(e.currentTarget)
-        dataFromForm = formDataFunc(e.currentTarget)
+        dataFromForm = formDataFunc(e.currentTarget, method, path, token)
     }
 
     let formEl = document.querySelector(classNameForm)
