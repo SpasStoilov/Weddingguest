@@ -2,26 +2,30 @@
 
 function Register(req, res){
     console.log("Hand Register REQ.body:", req.body)
+    res.json({})
 }
 
 function Login(req, res){
     console.log("Hand Login REQ.body:", req.body)
+    res.json({})
 }
 
 function CreateEvent(req, res){
     console.log("Hand CreateEvent REQ.body:", req.body)
+    res.json({})
 }
 
 function UpdateEvent(req, res){
     console.log("Hand UpdateEvent REQ.body:", req.body)
+    res.json({})
 }
 
 
-const useHandler = {
+let useHandler = {
     Register,
     Login,
     CreateEvent,
     UpdateEvent
 }
 
-model.exports = useHandler
+module.exports = useHandler;

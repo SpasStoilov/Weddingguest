@@ -9,6 +9,7 @@ async function startDataBase() {
             useNewUrlParser: true,
             useUnifiedTopology: true
         })
+        console.log('>>> Database conected to Compass')
     }
     catch (err) {
         console.error('>>> DataBase Not Working:' + err.message);
