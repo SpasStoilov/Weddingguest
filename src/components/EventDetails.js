@@ -1,16 +1,23 @@
 import { Link, Outlet } from 'react-router-dom'
 import { useParams } from "react-router-dom"
-import { useContext } from 'react'
+import { useContext, useEffect } from 'react'
 import { WeddingEventsContext } from '../App'
+import { FormEffect } from '../FormEffect'
 
 export function EventDetails() {
     
     let eventID = useParams().eventId
     let allEvents = useContext(WeddingEventsContext)
     let concreteEvent = allEvents.filter(evn => evn._id === eventID)[0]
-   
+
+    useEffect(() => {
+        let [cleaner, data] = FormEffect(".event-detail-conteiner")
+        console.log(data)
+        return cleaner
+    })
+
     return (
-        <form className="event-detail-conteiner">
+        <form className="event-detail-conteiner" >
             
             <div className="event-detail-head">
                 <div className="event-detail-head-img">
@@ -24,6 +31,7 @@ export function EventDetails() {
             </div>
 
             <div className="event-detail-menu">
+                <Link to={'head/'+ eventID}>Title</Link>
                 <Link to={'fooddrinks/' + eventID}>Menu</Link>
                 <Link to={'locations/'+ eventID}>Locations</Link>
                 <Link to={'guest/hints/'+ eventID}>Hints</Link>
@@ -35,8 +43,8 @@ export function EventDetails() {
             </div>
 
             <div className="event-detail-body-actions">
-                <input type="submit" className="event-detail-actions-save" value="Save"/>
-                <input type="submit" className="event-detail-actions-delete" value="Delete"/>
+                <input type="submit" className="event-detail-actions-save" defaultValue="Save"/>
+                <input type="click" className="event-detail-actions-delete" defaultValue="Delete"/>
             </div>
 
         </form>

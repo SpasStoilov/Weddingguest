@@ -1,4 +1,3 @@
-import { Link } from "react-router-dom"
 import { useParams } from "react-router-dom"
 import { useState, useContext } from "react"
 import { WeddingEventsContext } from "../App"
@@ -88,7 +87,7 @@ export function FoodDrinks(){
     return (
 
         <div className="event-detail-form-FoodDrinks">
-
+            <h1 className="event-details-title-body-section">Menu</h1>
             {
                 Menu.map( getMe => {
                     return (

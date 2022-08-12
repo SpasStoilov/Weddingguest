@@ -1,6 +1,6 @@
 import { MultiCard } from "./FoodDrinks";
 import { useState, useEffect } from "react"
-import { formDataFunc } from "../getFormData"
+import { FormEffect } from '../FormEffect'
 
 let dataSalads = [
     {_id: 'S-0', title:'S-0', recepie: 'Recepie here...', vote: ''},
@@ -61,21 +61,10 @@ export function CreateEvents() {
         reader.readAsDataURL(e.target.files[0]);
     }
 
-    function onSubmitData (e) {
-        e.preventDefault();
-        console.log('hello Form!')
-        let dataFromForm = formDataFunc(e.currentTarget)
-        console.log(dataFromForm)
-    }
-
     useEffect(() => {
-        console.log('hello useEffect!')
-        let formEl = document.querySelector('.creat-event-form')
-        formEl.addEventListener('submit', onSubmitData)
-
-        return () => {
-            formEl.removeEventListener('submit', onSubmitData)
-        };
+        let [cleaner, data] = FormEffect(".creat-event-form")
+        console.log(data)
+        return cleaner
     })
 
     return (
@@ -109,24 +98,3 @@ export function CreateEvents() {
         </form>
     );
 }
-
-
-
-// // inputImage background logic:
-
-// formInputImageHolder.addEventListener('change', onChangePicInput)
-// function onChangePicInput(e){
-//     if (e.target.nodeName == "INPUT"){
-
-//         let reader = new FileReader()
-//         reader.addEventListener('load', () => {
-//             console.log(reader.result)
-//             e.target.style.backgroundImage = `url(${reader.result})`
-//         })
-
-//         console.log("CTX: ", e.target)
-//         console.log("CTX: ", e.target.files)
-//         console.log("INF about pic upload: ", e.target.files[0])
-//         reader.readAsDataURL(e.target.files[0]);
-//     }
-// };

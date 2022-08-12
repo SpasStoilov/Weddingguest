@@ -51,9 +51,9 @@ let event = {
     afterMeals: dataAfterMeal,
     alcohols: dataAlcohol,
     softs: dataSoft,
-    locations: {addres:"Some Text Addres...."},
+    locations: "Some Text Addres....",
     guests: [],
-    hints: {hints:"Some Text Hints...."}
+    hints: "Some Text Hints...."
 }
 
 let event2 = {
@@ -67,9 +67,16 @@ let event2 = {
     afterMeals: dataAfterMeal,
     alcohols: dataAlcohol,
     softs: dataSoft,
-    locations: {addres:"Some Text Addres...."},
+    locations: "Some Text Addres....",
     guests: [],
-    hints: {hints:"Some Text Hints...."}
+    hints: "Some Text Hints...."
 }
 
-export let allEvents = [event, event2]
+
+let userer = {
+    _id: "adkasdlkasdkladlka",
+    events: [event, event2]
+}
+
+// for owner send his ID:
+export let allEvents = userer.events

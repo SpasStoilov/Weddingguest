@@ -8,7 +8,7 @@ import { allEvents } from './eventData';
 export const WeddingEventsContext = React.createContext()
 
 export function App() {
-    
+    //here i must fetch the userer
     return (
         <BrowserRouter>
             <Navbar/>

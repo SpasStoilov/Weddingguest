@@ -10,6 +10,7 @@ import { FoodDrinks } from './FoodDrinks';
 import { Locations } from './Locations';
 import { GuestsHints } from './GuestsHints';
 import { Guests } from './Guests';
+import { HeadEvent } from './HeadEvent';
 
 export function Main() {
 
@@ -28,6 +29,7 @@ export function Main() {
                         <Route path='/logout' element={<LogOut/>}/>
                         <Route path='/myevents/event/details/' element={<EventDetails/>}>
 
+                            <Route path='head/:eventId' element={<HeadEvent/>}/>
                             <Route path='fooddrinks/:eventId' element={<FoodDrinks/>}/>
                             <Route path='locations/:eventId' element={<Locations/>}/>
                             <Route path='guest/hints/:eventId' element={<GuestsHints/>}/>
