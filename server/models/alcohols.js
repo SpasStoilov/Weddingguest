@@ -8,3 +8,5 @@ let alcoholSchema = new Schema({
 
 
 let Alcohol = model('Alcohol', alcoholSchema)
+
+module.exports = Alcohol

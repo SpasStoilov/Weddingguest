@@ -9,3 +9,5 @@ let mainSchema = new Schema({
 
 
 let Main = model('Main', mainSchema)
+
+module.exports = Main

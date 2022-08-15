@@ -16,3 +16,5 @@ let evetSchema = new Schema({
 })
 
 let Event = model("Event", evetSchema)
+
+module.exports = Event

@@ -4,14 +4,17 @@ import { useContext, useEffect } from 'react'
 import { WeddingEventsContext } from '../App'
 import { FormEffect } from '../FormEffect'
 
+
+
 export function EventDetails() {
     
     let eventID = useParams().eventId
+    const path = `user/events/update?eventId=${eventID}`
     let allEvents = useContext(WeddingEventsContext)
     let concreteEvent = allEvents.filter(evn => evn._id === eventID)[0]
 
     useEffect(() => {
-        let [cleaner, data] = FormEffect(".event-detail-conteiner")
+        let [cleaner, data] = FormEffect(".event-detail-conteiner", "PUT", path, "!someTokenHere")
         console.log(data)
         return cleaner
     })

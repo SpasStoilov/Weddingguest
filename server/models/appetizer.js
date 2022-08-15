@@ -9,3 +9,5 @@ let appetizerSchema = new Schema({
 
 
 let Appetizer = model('Appetizer', appetizerSchema)
+
+module.exports = Appetizer

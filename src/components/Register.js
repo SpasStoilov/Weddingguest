@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { useEffect } from "react";
 import { FormEffect } from '../FormEffect'
 
-const path = 'register/'
+const path = 'register'
 
 export function Register() {
 

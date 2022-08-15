@@ -8,3 +8,5 @@ let softSchema = new Schema({
 
 
 let Soft = model('Soft', softSchema)
+
+module.exports = Soft

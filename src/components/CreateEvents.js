@@ -2,6 +2,10 @@ import { MultiCard } from "./FoodDrinks";
 import { useState, useEffect } from "react"
 import { FormEffect } from '../FormEffect'
 
+
+const path = 'user/events/create'
+
+
 let dataSalads = [
     {_id: 'S-0', title:'S-0', recepie: 'Recepie here...', vote: ''},
 ]
@@ -62,7 +66,7 @@ export function CreateEvents() {
     }
 
     useEffect(() => {
-        let [cleaner, data] = FormEffect(".creat-event-form")
+        let [cleaner, data] = FormEffect(".creat-event-form",'POST', path, "!!!someTokeHere")
         console.log(data)
         return cleaner
     })

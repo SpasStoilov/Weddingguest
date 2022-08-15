@@ -8,3 +8,5 @@ let guestSchema = new Schema({
 
 
 let Guest = model('Guest', guestSchema)
+
+module.exports = Guest

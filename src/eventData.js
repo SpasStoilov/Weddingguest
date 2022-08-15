@@ -75,7 +75,9 @@ let event2 = {
 
 let userer = {
     _id: "adkasdlkasdkladlka",
-    events: [event, event2]
+    events: [event, event2],
+    email: "sadasdasd",
+    password: "sdfsdfsdf"
 }
 
 // for owner send his ID:

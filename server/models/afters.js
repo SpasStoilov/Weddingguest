@@ -9,3 +9,5 @@ let afterSchema = new Schema({
 
 
 let After = model('After', afterSchema)
+
+module.exports = After

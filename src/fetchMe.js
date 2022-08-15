@@ -1,9 +1,9 @@
-const baseURL = 'http://localhost:3030'
+const baseURL = 'http://localhost:3000/'
 
 
 function Validator(path, payload){
 
-    if (path == '/register'){
+    if (path == 'register'){
 
         if (!payload.email){
             alert('Email is empty!')
@@ -21,36 +21,49 @@ function Validator(path, payload){
             return payload
         }
     }
+    else if (path == 'login'){
+
+        if (!payload.email){
+            alert('Email is empty!')
+        }
+        else if (!payload.password){
+            alert('Password is empty!')
+        }
+        else {
+            return payload
+        }
+    }
 }
 
 
 
-export async function fetchME(payload=null, method=null, path=null, token=null){
+export async function fetchME(method, path, payload={}, token=null){
 
-    //       GET  /register {email, password, repat-password}
-    console.log(payload, method, path, token)
-
-    // validate:
-    payload = Validator(path, payload)
-    //---------------------------------------------------------------------
-
-    //fetch data:
-    let data = {}
-
-    if (method === "POST"){
-        data = {
-            method,
-            headers:{
-                'Content-Type': "application/json",
-                'X-Authorization': !token ? 'empty': (token).toString()
-            },
-            body: JSON.stringify(payload)
-        }
-    }
+    console.log(method, path, payload, token)
 
     try {
 
-        let response = await fetch(`${baseURL}${path}`, data)
+        // Validate:
+        payload = Validator(path, payload)
+        //---------------------------------------------------------------------
+
+        //Fetch data:
+       
+        if (method === "POST" || method === "PUT"){
+            
+            payload = {
+                method,
+                headers: {
+                    'Content-Type': "application/json",
+                    'X-Authorization': !token ? 'empty': (token).toString()
+                },
+                body: JSON.stringify(payload)
+            }
+        }
+
+        console.log("Fetch Peayload: ", payload)
+
+        let response = await fetch(`${baseURL}${path}`, payload)
 
         if (!response.ok) {
             let statusErr = await response.json()
@@ -71,6 +84,7 @@ export async function fetchME(payload=null, method=null, path=null, token=null){
     }
     catch (err){
         console.log(err.message)
+        throw err
     }
 
 }

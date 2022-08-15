@@ -2,6 +2,13 @@ import { Link } from 'react-router-dom'
 // import '../styles/App.css'
 
 export function Navbar() {
+
+    function deleteLocalsAndCookies (){
+        localStorage.clear()
+        // this part must delete session at server and at register:
+        document.cookie = ''
+    }
+
     return (
         <nav> 
 
@@ -16,7 +23,7 @@ export function Navbar() {
                     <div className="Logged">
                         <Link to='/myevents'>My Events</Link>
                         <Link to='/createevents'>Create Events</Link>
-                        <Link to='/logout'>LogOut</Link>
+                        <a href='/login' onClick={deleteLocalsAndCookies}>LogOut</a>
                     </div>
             }
 
