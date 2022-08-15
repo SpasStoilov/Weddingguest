@@ -4,8 +4,6 @@ const GlobalMidllewares = require("./GlobalMidds.js");
 const router = require("./router.js");
 
 
-
-
 async function Main(){
     try {
         // Starting DataBase:
@@ -17,6 +15,8 @@ async function Main(){
 
         // Global middlewares:
         GlobalMidllewares(server, express);
+    
+        console.log("FFFFFF")
 
         // Rounter:
         router(server);

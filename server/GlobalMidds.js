@@ -1,18 +1,9 @@
 const esepressSession = require('express-session');
+const cors = require('cors')
 
-
-function GlobalMidllewares(server, express) {
+async function GlobalMidllewares(server, express) {
 
     console.log('S:>>> GlobalMiddlewares acting...')
-
-    // --------- middlewere settings -------------:
-
-    const expressSessionConfig = {
-        secret: "someKey",
-        resave: false,
-        saveUninitialized: true,
-        cookie: {secure: false}
-    }
 
     // --------- middleware using here -------------:
          //express.json() middle - parses req body from json to object:
@@ -20,17 +11,14 @@ function GlobalMidllewares(server, express) {
     server.use(express.urlencoded({ extended: false }));
          //--------
     server.use(express.static('./static'));
-    server.use(esepressSession(expressSessionConfig))
-
-    server.use((req, res, next) =>{
-        console.log("HIIIIII")
-        res.header('Access-Controll-Allow-Origin', '*');
-        res.header('Access-Controll-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE');
-        res.header('Access-Controll-Allow-Header', 'Content-Type, X-Authorization');
-        next();
-    });
+    server.use(esepressSession({
+        secret: "someKey",
+        resave: false,
+        saveUninitialized: true,
+        cookie: {secure: false}
+    }))
     
-
+    server.use(cors())
 };
 
 module.exports = GlobalMidllewares;

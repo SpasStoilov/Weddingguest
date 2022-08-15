@@ -18,7 +18,6 @@ async function Register(req, res){
     let result = validationResult(req)
     console.log("Hand Register Validations:", result)
 
-  
     try {
 
         let userExist = await User.findOne({email:req.body.email})
@@ -33,13 +32,13 @@ async function Register(req, res){
             res.status(302) //found
             res.json({})
         }
-        else{
+        else {
             let user = new User({
                 email: req.body.email,
                 password: hashedPassword,
                 accessToken
             })
-    
+           
             user.save()
             req.session.user = user
             res.json(user)
@@ -49,8 +48,6 @@ async function Register(req, res){
         console.log(err)
     }
 
-
-    
 }
 
 async function Login(req, res){
@@ -61,29 +58,37 @@ async function Login(req, res){
 
     try {
 
-        if (result.errors.length !== 0) {
-            res.status(406) //Not acceptable
-            res.json(result.errors)
-        }
-
         let user = await User.findOne({email:req.body.email})
         let isItUser = await bcrypt.compare(req.body.password, user.password)
 
         if (isItUser) {
             res.json(user)
         }
-        
-        res.json({
-            email: req.body.email,
-            passwrod: req.body.password,
-            msg: err.message,
-            param1: 'email',
-            param2: "password",
-        })
-        
+        else {
+
+            result.errors = result.errors.concat(
+                [
+                    {
+                        msg: 'Email and password do not match!',
+                        param: 'email',
+                    },
+                    {
+                        msg: 'Email and password do not match!',
+                        param: 'password'
+                    }
+                ]
+            )
+
+        }
+
+        if (result.errors.length !== 0) {
+            res.status(406) //Not acceptable
+            res.json(result.errors)
+        }
+   
     }
     catch (err) {
-        console.log(err.message)
+        console.log(err)
     }
         
 }
