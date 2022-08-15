@@ -1,9 +1,9 @@
-const baseURL = 'http://localhost:3000/'
+const baseURL = 'http://localhost:3030/'
 
 
 function Validator(path, payload){
 
-    if (path == 'register'){
+    if (path === 'register'){
 
         if (!payload.email){
             alert('Email is empty!')
@@ -21,7 +21,7 @@ function Validator(path, payload){
             return payload
         }
     }
-    else if (path == 'login'){
+    else if (path === 'login'){
 
         if (!payload.email){
             alert('Email is empty!')
@@ -48,21 +48,23 @@ export async function fetchME(method, path, payload={}, token=null){
         //---------------------------------------------------------------------
 
         //Fetch data:
-       
         if (method === "POST" || method === "PUT"){
-            
-            payload = {
+
+            let auth = !token ? 'empty': (token).toString()
+
+            let DATA = {
                 method,
                 headers: {
                     'Content-Type': "application/json",
-                    'X-Authorization': !token ? 'empty': (token).toString()
+                    'X-Authorization': auth
                 },
                 body: JSON.stringify(payload)
             }
+            payload = DATA
         }
 
         console.log("Fetch Peayload: ", payload)
-
+        console.log("Fetch Path: ", `${baseURL}${path}`)
         let response = await fetch(`${baseURL}${path}`, payload)
 
         if (!response.ok) {
@@ -70,21 +72,11 @@ export async function fetchME(method, path, payload={}, token=null){
             throw new Error(statusErr.message)
         }
 
-        if (response.status == 403) { // data exist
-            let statusErr = await response.json()
-            throw new Error(statusErr.message)
-        }
-
-        if (response.status == 204) { // empty
-            return []
-        }
-
         return await response.json()
 
     }
     catch (err){
         console.log(err.message)
-        throw err
     }
 
 }

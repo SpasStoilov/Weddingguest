@@ -18,74 +18,91 @@ async function Register(req, res){
     let result = validationResult(req)
     console.log("Hand Register Validations:", result)
 
-    if (result.errors.length === 0) {
-        
-        try {
-            const hashedPassword = await bcrypt.hash(req.body.password, saltRounds);
-            const accessToken = await bcrypt.hash(req.body.email, saltRounds);
+  
+    try {
+
+        let userExist = await User.findOne({email:req.body.email})
+        const hashedPassword = await bcrypt.hash(req.body.password, saltRounds);
+        const accessToken = await bcrypt.hash(req.body.email, saltRounds);
+
+        if (result.errors.length !== 0) {
+            res.status(406) //Not acceptable
+            res.json(result.errors)
+        }
+        else if (userExist){
+            res.status(302) //found
+            res.json({})
+        }
+        else{
             let user = new User({
                 email: req.body.email,
                 password: hashedPassword,
                 accessToken
             })
+    
             user.save()
             req.session.user = user
             res.json(user)
         }
-        catch (err) {
-            console.log(err.message)
-        }
-        
-    } 
-    else {
-        res.json(result.errors)
     }
+    catch (err) {
+        console.log(err)
+    }
+
+
     
 }
 
 async function Login(req, res){
-    
+
     console.log("Hand Login REQ.body:", req.body)
     let result = validationResult(req)
     console.log("Hand Login Validations:", result)
 
-    if (result.errors.length === 0) {
-        
-        try {
-            let user = await User.findOne({email:req.body.email})
-            let isUser = await bcrypt.compare(req.body.password, user.password)
-            if(isUser){
-                res.json(user)
-            }
-            else {
-                throw new Error("Email and Password do not match!")
-            }
+    try {
+
+        if (result.errors.length !== 0) {
+            res.status(406) //Not acceptable
+            res.json(result.errors)
         }
-        catch (err) {
-            console.log(err.message)
-            res.json({
-                email: req.body.email,
-                passwrod: req.body.password,
-                msg: err.message,
-                param1: 'email',
-                param2: "password",
-            })
+
+        let user = await User.findOne({email:req.body.email})
+        let isItUser = await bcrypt.compare(req.body.password, user.password)
+
+        if (isItUser) {
+            res.json(user)
         }
         
-    } 
-    else {
-        res.json(result.errors)
+        res.json({
+            email: req.body.email,
+            passwrod: req.body.password,
+            msg: err.message,
+            param1: 'email',
+            param2: "password",
+        })
+        
     }
+    catch (err) {
+        console.log(err.message)
+    }
+        
 }
 
-function CreateEvent(req, res){
+async function CreateEvent(req, res){
     console.log("Hand CreateEvent REQ.body:", req.body)
+    let isUserValid = await bcrypt.compare(req.session.user.email, req.headers['X-Authorization'])
+    if (isUserValid){
+        res.json({})
+    }
     res.json({})
 }
 
-function UpdateEvent(req, res){
+async function UpdateEvent(req, res){
     console.log("Hand UpdateEvent REQ.body:", req.body)
-    res.json({})
+    let isUserValid = await bcrypt.compare(req.session.user.email, req.headers['X-Authorization'])
+    if (isUserValid){
+        res.json({})
+    }
 }
 
 

@@ -7,7 +7,8 @@ export function formDataFunc(currentTarget, method=null, path=null, token=null){
     let payload = Object.fromEntries(formData.entries())
 
     if (method && path){
-        return fetchME(method, path, payload, token)
+        let response = fetchME(method, path, payload, token)
+        return response
     }
     
     return payload

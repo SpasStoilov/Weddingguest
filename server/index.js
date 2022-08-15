@@ -4,6 +4,8 @@ const GlobalMidllewares = require("./GlobalMidds.js");
 const router = require("./router.js");
 
 
+
+
 async function Main(){
     try {
         // Starting DataBase:
@@ -11,7 +13,7 @@ async function Main(){
 
         // SERVER:
         const server = express();
-        server.listen(3000, () => console.log("Express working on port  3000"));
+        server.listen(3030, () => console.log("Express working on port  3030"));
 
         // Global middlewares:
         GlobalMidllewares(server, express);

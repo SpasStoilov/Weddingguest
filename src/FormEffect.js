@@ -15,5 +15,4 @@ export function FormEffect(classNameForm, method=null, path=null, token=null){
     let cleaner = () => formEl.removeEventListener('submit', onSubmitData)
 
     return [cleaner, dataFromForm]
-        
 }
