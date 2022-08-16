@@ -1,4 +1,5 @@
 const { validationResult } = require("express-validator");
+const formidable = require("formidable")
 const bcrypt = require('bcrypt');
 const After = require("./models/afters.js")
 const Alcohol = require("./models/alcohols.js")
@@ -9,6 +10,7 @@ const Main = require("./models/mains.js")
 const Salad = require("./models/salads")
 const Soft = require("./models/softs.js")
 const User = require("./models/user.js")
+const useService = require("./services.js")
 
 const saltRounds = 10;
 
@@ -17,6 +19,7 @@ async function Register(req, res){
     console.log("Hand Register REQ.body:", req.body)
     let result = validationResult(req)
     console.log("Hand Register Validations:", result)
+    console.log("Hand Register REQ.session:", req.session)
 
     try {
 
@@ -40,7 +43,6 @@ async function Register(req, res){
             })
            
             user.save()
-            req.session.user = user
             res.json(user)
         }
     }
@@ -95,11 +97,37 @@ async function Login(req, res){
 
 async function CreateEvent(req, res){
     console.log("Hand CreateEvent REQ.body:", req.body)
-    let isUserValid = await bcrypt.compare(req.session.user.email, req.headers['X-Authorization'])
-    if (isUserValid){
-        res.json({})
+    console.log("Hand CreateEvent REQ.session:", req.session)
+
+    try {
+
+        // let isUserValid = await bcrypt.compare(req.session.user.email, req.headers['X-Authorization'])
+        console.log('S:>>> Hand CreateEvent X-Authorization:', req.headers)
+        let user = await User.findOne({accessToken: req.headers['x-authorization']})
+        console.log('S:>>> Hand CreateEvent User:', user)
+
+        if (user){
+            
+            let formDataClient = new formidable.IncomingForm()
+            console.log('S:>>> Hand CreateEvent -> FORMDATA:', formDataClient);
+
+            formDataClient.parse(req, (err, fields, files) => {
+                console.log('S:>>> Hand CreateEvent: ERRORS:', err);
+                console.log('S:>>> Hand CreateEvent: FIELDS:', fields);
+                console.log('S:>>> Hand CreateEvent: FILES:', files);
+                console.log('S:>>> Hand CreateEvent: FILES Keys:', Object.keys(files));
+                let imgsNewPaths = []
+                useService.appendImgInStaticUploads(files, imgsNewPaths)
+            })
+            res.json({yes:"ok"})
+        }
+        res.json({err:"no"})
+
     }
-    res.json({})
+    catch (err) {
+        console(err)
+    }
+
 }
 
 async function UpdateEvent(req, res){

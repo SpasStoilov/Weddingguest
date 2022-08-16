@@ -1,9 +1,9 @@
 import { MultiCard } from "./FoodDrinks";
-import { useState, useEffect } from "react"
-import { FormEffect } from '../FormEffect'
+import { useState} from "react"
+import { fetchME } from "../fetchMe"
+import { DataForm } from "../getFormData"
 
-
-const path = 'user/events/create'
+const path = '/user/events/create'
 
 
 let dataSalads = [
@@ -65,14 +65,37 @@ export function CreateEvents() {
         reader.readAsDataURL(e.target.files[0]);
     }
 
-    useEffect(() => {
-        let [cleaner, data] = FormEffect(".creat-event-form",'POST', path, "!!!someTokeHere")
-        console.log(data)
-        return cleaner
-    })
+    async function OnSub(e){
+        e.preventDefault();
+        let payload = new FormData(e.currentTarget)
+        console.log(payload)
+
+        try{
+            let response = await fetchME("POST", path, payload, localStorage.getItem('user'), true)
+            console.log(await response.json())
+            // if (response.status === 406){
+            //     let result = await response.json()
+            //     for (let obj of result){
+            //         correct[obj.param]([obj.msg, 'red'])
+            //     }
+            // }
+            // else if (response.status === 302){
+            //     navigate('/login')
+            // }
+            // else {
+            //     let user = await response.json()
+            //     localStorage.setItem('user', user.accessToken)
+            //     window.location.replace('/createevents')
+            // }
+        }
+        catch (err){
+            console.log(err.message)
+        }
+        
+    }
 
     return (
-        <form className="creat-event-form">
+        <form className="creat-event-form" onSubmit={OnSub}>
 
             <div className="event-create-headers-conteiner">
                 <input className="event-creat-form-imageUrl" name="imageUrl" type="file" onChange={LoadFile}/>

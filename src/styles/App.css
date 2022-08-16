@@ -4,6 +4,7 @@ main{
 }
 
 .login-form, .register-form {
+    margin-top: 50px;
     display: inline-flex;
     align-items: center;
     flex-direction: column;
@@ -13,6 +14,11 @@ main{
     width: 350px;
     height: 40px;
 
+}
+
+.register-form > label, .login-form > label{
+    align-self: flex-start;
+    margin-left: 10px;
 }
 
 .Logged, .Guest {

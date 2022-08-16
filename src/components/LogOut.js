@@ -4,10 +4,10 @@ export function LogOut() {
 
     useEffect(() => {
         
-        console.log('dfsdfsfsdfsdfsdf', document.cookie)
+        console.log('LogOut ->Cookies: ', document.cookie)
         localStorage.clear()
         // this part must delete session at server and at register:
-        document.cookie = ''
+        // document.cookie = ''
     })
 
     return (

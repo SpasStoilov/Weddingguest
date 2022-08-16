@@ -1,5 +1,6 @@
 const esepressSession = require('express-session');
 const cors = require('cors')
+const cookieParser = require('cookie-parser');
 
 async function GlobalMidllewares(server, express) {
 
@@ -18,6 +19,7 @@ async function GlobalMidllewares(server, express) {
         cookie: {secure: false}
     }))
     
+    server.use(cookieParser());
     server.use(cors())
 };
 

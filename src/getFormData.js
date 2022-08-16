@@ -13,3 +13,9 @@ export function formDataFunc(currentTarget, method=null, path=null, token=null){
     
     return payload
 }
+
+export function DataForm(currentTarget){
+    let formData = new FormData(currentTarget)
+    let payload = Object.fromEntries(formData.entries())
+    return payload
+}
