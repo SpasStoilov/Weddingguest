@@ -28,6 +28,8 @@ function router(server){
         useHandler.Login
     )
 
+    server.get('/user/events', useHandler.Events)
+
     server.post('/user/events/create', useHandler.CreateEvent)
     server.post('/user/events/:queryParams', useHandler.UpdateEvent)
 }

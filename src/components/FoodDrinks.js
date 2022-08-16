@@ -1,6 +1,6 @@
 import { useParams } from "react-router-dom"
 import { useState, useContext } from "react"
-import { WeddingEventsContext } from "../App"
+import { WeddingEventsContext } from "./MyEvents"
 
 export function MultiCard(props){
 

@@ -16,9 +16,9 @@ function appendImgInStaticUploads(files, imgsNewPaths) {
         if (originalName){
 
             let ID = (Math.random() * (10**20)).toFixed() + '-' + (Math.random() * (10**20)).toFixed() + '-' + (Math.random() * (10**20)).toFixed();
-
+            
             const newPath = './static/useruploads/'+ `ID-${ID}-end$` + originalName;
-            const reducedNewPath = '/useruploads/'+ `ID-${ID}-end$` + originalName;
+            const reducedNewPath = 'http://localhost:3030/useruploads/'+ `ID-${ID}-end$` + originalName;
 
             try {
                 fs.copyFile(oldPath, newPath);

@@ -54,7 +54,7 @@ async function Login(req, res){
 
     try {
 
-        let user = await User.findOne({email:req.body.email})
+        let user = await User.findOne({email: req.body.email})
         let isItUser = await bcrypt.compare(req.body.password, user.password)
 
         if (isItUser) {
@@ -87,6 +87,67 @@ async function Login(req, res){
         console.log(err)
     }
         
+}
+
+async function Events(req, res){
+    console.log("Hand Event req.headers:", req.headers['x-authorization'])
+    try {
+        let user = await User.findOne({accessToken: req.headers['x-authorization']})
+            .populate({
+                path: "events",
+                populate: {
+                    path: "salads",
+                    populate: "vote"
+                    }
+            })
+
+        if (user && user.events.length > 0){
+
+            let allEvents = await Event.find({ownerId: user._id})
+                .populate("guests")
+                .populate({
+                    path: "salads",
+                    populate: 'vote'
+                })
+                .populate({
+                    path: "appetizers",
+                    populate: 'vote'
+                })
+                .populate({
+                    path: "mains",
+                    populate: 'vote'
+                })
+                .populate({
+                    path: "afterMeals",
+                    populate: 'vote'
+                })
+                .populate({
+                    path: "alcohols",
+                    populate: 'vote'
+                })
+                .populate({
+                    path: "softs",
+                    populate: 'vote'
+                })
+
+           
+            console.log(allEvents)
+            res.status(200)
+            res.json(allEvents)
+        }
+        else if (user && user.events.length == 0){
+            res.status(204) // no content
+            res.json({})
+        }
+        else {
+            res.status(401) // unauthorized
+            res.end()
+        }
+    }
+    catch (err) {
+        console.log(err)
+    }
+    
 }
 
 async function CreateEvent(req, res){
@@ -146,6 +207,7 @@ async function CreateEvent(req, res){
                         imageUrl: imgsNewPaths[0],
                         hints: fields.hints,
                         locations: fields.locations,
+                        ownerId: user._id,
                         guests: [],
                         salads: mapedSalads,
                         appetizers: mapedAppetizer,
@@ -171,6 +233,7 @@ async function CreateEvent(req, res){
         }
         else {
             res.status(401) // unauthorized
+            res.end()
         }
 
     }
@@ -193,7 +256,8 @@ let useHandler = {
     Register,
     Login,
     CreateEvent,
-    UpdateEvent
+    UpdateEvent,
+    Events
 }
 
 module.exports = useHandler;

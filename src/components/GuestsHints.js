@@ -1,6 +1,6 @@
 import { useParams } from "react-router-dom"
 import { useContext } from "react"
-import { WeddingEventsContext } from "../App"
+import { WeddingEventsContext } from "./MyEvents"
 
 export function GuestsHints(){
     let eventID = useParams().eventId

@@ -6,6 +6,7 @@ let evetSchema = new Schema({
     imageUrl: String,
     hints: String,
     locations: String,
+    ownerId: String,
     guests: [{type: Schema.Types.ObjectId, ref: "Guest"}],
     salads: [{type: Schema.Types.ObjectId, ref: "Salad"}],
     appetizers: [{type: Schema.Types.ObjectId, ref: "Appetizer"}],

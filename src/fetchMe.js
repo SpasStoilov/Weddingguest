@@ -1,39 +1,35 @@
 const baseURL = 'http://localhost:3030'
 
 
-// function Validator(path, payload){
+function Validator(path, payload){
 
-//     if (path === '/register'){
+    if (path === '/register'){
 
-//         if (!payload.email){
-//             alert('Email is empty!')
-//         }
-//         else if (!payload.password){
-//             alert('Password is empty!')
-//         }
-//         else if (!payload.repeatPassword){
-//             alert('repeatPassword is empty!')
-//         }
-//         else if (payload.repeatPassword !== payload.password){
-//             alert('Passwords do not match!')
-//         }
-//         else {
-//             return payload
-//         }
-//     }
-//     else if (path === '/login'){
+        if (!payload.email){
+            alert('Email is empty!')
+        }
+        else if (!payload.password){
+            alert('Password is empty!')
+        }
+        else if (!payload.repeatPassword){
+            alert('repeatPassword is empty!')
+        }
+        else if (payload.repeatPassword !== payload.password){
+            alert('Passwords do not match!')
+        }
+    }
+    else if (path === '/login'){
 
-//         if (!payload.email){
-//             alert('Email is empty!')
-//         }
-//         else if (!payload.password){
-//             alert('Password is empty!')
-//         }
-//         else {
-//             return payload
-//         }
-//     }
-// }
+        if (!payload.email){
+            alert('Email is empty!')
+        }
+        else if (!payload.password){
+            alert('Password is empty!')
+        }
+       
+    }
+    return payload
+}
 
 
 
@@ -42,14 +38,14 @@ export async function fetchME(method, path, payload={}, token=null, flag=false){
     console.log(method, path, payload, token)
 
     // Validate:
-    // payload = Validator(path, payload)
+    payload = Validator(path, payload)
     //---------------------------------------------------------------------
 
+    let auth = token ? token: 'empty'
+    
     //Fetch data:
     if (method === "POST" || method === "PUT"){
 
-        let auth = token ? token: 'empty'
-        
         let headers = {
             'x-authorization': auth,
             'Content-Type':"application/json"
@@ -67,6 +63,11 @@ export async function fetchME(method, path, payload={}, token=null, flag=false){
             body: flag ? payload : JSON.stringify(payload)
         }
         payload = DATA
+    }
+    else if (method === "GET"){
+        payload = {
+            headers: {'x-authorization': auth}
+        }
     }
 
     console.log("Fetch Peayload: ", payload)
