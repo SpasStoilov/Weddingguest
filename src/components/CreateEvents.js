@@ -1,11 +1,8 @@
 import { MultiCard } from "./FoodDrinks";
 import { useState} from "react"
 import { fetchME } from "../fetchMe"
-import { DataForm } from "../getFormData"
 
-const path = '/user/events/create'
-
-
+// Default Templates Info:
 let dataSalads = [
     {_id: 'S-0', title:'S-0', recepie: 'Recepie here...', vote: ''},
 ]
@@ -29,6 +26,11 @@ let dataAlcohol = [
 let dataSoft = [
     {_id: 'F-0', title:'F-0', recepie: '', vote: ''},
 ]
+//----------------------------------------------------------------------------------
+
+// AJX PATH:
+const path = '/user/events/create'
+//----------------------------------------------------------------------------------
 
 export function CreateEvents() {
 
@@ -72,21 +74,12 @@ export function CreateEvents() {
 
         try{
             let response = await fetchME("POST", path, payload, localStorage.getItem('user'), true)
-            console.log(await response.json())
-            // if (response.status === 406){
-            //     let result = await response.json()
-            //     for (let obj of result){
-            //         correct[obj.param]([obj.msg, 'red'])
-            //     }
-            // }
-            // else if (response.status === 302){
-            //     navigate('/login')
-            // }
-            // else {
-            //     let user = await response.json()
-            //     localStorage.setItem('user', user.accessToken)
-            //     window.location.replace('/createevents')
-            // }
+            if (response.status === 401){
+                window.location.replace('/login')
+            }
+            else {
+                window.location.replace('/myevents')
+            }
         }
         catch (err){
             console.log(err.message)

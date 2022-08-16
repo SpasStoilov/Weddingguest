@@ -1,4 +1,10 @@
 const fs = require("fs/promises");
+const After = require("./models/afters.js")
+const Alcohol = require("./models/alcohols.js")
+const Appeteizer = require("./models/appetizer.js")
+const Main = require("./models/mains.js")
+const Salad = require("./models/salads")
+const Soft = require("./models/softs.js")
 
 function appendImgInStaticUploads(files, imgsNewPaths) {
     for (let Img of Object.keys(files)){
@@ -27,8 +33,55 @@ function appendImgInStaticUploads(files, imgsNewPaths) {
 }
 
 
+
+
+
+function recordMenuMeals(mealList, guideMark, drink=false){
+
+    const modelsGuide = {
+        allSalads: Salad,
+        allAppetizer: Appeteizer,
+        allMain: Main,
+        allAfter: After,
+        allAlcohol: Alcohol,
+        allSoft: Soft,
+    }
+    
+    let Obj;
+    
+    async function SaveMenu(meal, index){
+        try {
+
+            if (index % 2 === 0 || drink === 'drink'){
+                Obj = new modelsGuide[guideMark]()
+                Obj.title = meal[1]
+                
+                if (drink === 'drink'){
+                    await Obj.save()
+                    return Obj
+                }
+            }
+            else {
+                Obj.recepie = meal[1]
+                await Obj.save()
+                return Obj
+            }
+
+        }
+        catch (err) {
+            throw err
+        }
+    }
+
+    let listPromise = Promise.all(mealList.map((meal, index) => SaveMenu(meal, index)))
+    return listPromise
+
+}
+
+
 const useService = {
     appendImgInStaticUploads,
+    recordMenuMeals
 }
 
 module.exports = useService

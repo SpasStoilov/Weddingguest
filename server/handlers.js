@@ -1,15 +1,9 @@
 const { validationResult } = require("express-validator");
 const formidable = require("formidable")
 const bcrypt = require('bcrypt');
-const After = require("./models/afters.js")
-const Alcohol = require("./models/alcohols.js")
-const Appeteizer = require("./models/appetizer.js")
+const User = require("./models/user.js")
 const Event = require("./models/events.js")
 const Guest = require("./models/guests")
-const Main = require("./models/mains.js")
-const Salad = require("./models/salads")
-const Soft = require("./models/softs.js")
-const User = require("./models/user.js")
 const useService = require("./services.js")
 
 const saltRounds = 10;
@@ -116,16 +110,72 @@ async function CreateEvent(req, res){
                 console.log('S:>>> Hand CreateEvent: FIELDS:', fields);
                 console.log('S:>>> Hand CreateEvent: FILES:', files);
                 console.log('S:>>> Hand CreateEvent: FILES Keys:', Object.keys(files));
+
                 let imgsNewPaths = []
                 useService.appendImgInStaticUploads(files, imgsNewPaths)
+    
+                async function RecordINDataBase(){
+
+                    const allSalads = Object.entries(fields).filter((Salad) => Salad[0].endsWith('-Salad') || Salad[0].endsWith('-Salad-recepie'))
+                    let mapedSalads =  await useService.recordMenuMeals(allSalads, 'allSalads')
+                    mapedSalads = mapedSalads.filter(el => el)
+                
+                    const allAppetizer = Object.entries(fields).filter((Appetizer) => Appetizer[0].endsWith('-Appetizer') || Appetizer[0].endsWith('-Appetizer-recepie'))
+                    let mapedAppetizer = await useService.recordMenuMeals(allAppetizer, 'allAppetizer')
+                    mapedAppetizer = mapedAppetizer.filter(el => el)
+
+                    const allMain = Object.entries(fields).filter((Main) => Main[0].endsWith('-Main') || Main[0].endsWith('-Main-recepie'))
+                    let mapedMain = await useService.recordMenuMeals(allMain, 'allMain')
+                    mapedMain = mapedMain.filter(el => el)
+
+                    const allAfter = Object.entries(fields).filter((After) => After[0].endsWith('-After') || After[0].endsWith('-After-recepie'))
+                    let mapedAfter = await useService.recordMenuMeals(allAfter, 'allAfter')
+                    mapedAfter = mapedAfter.filter(el => el)
+
+                    const allAlcohol = Object.entries(fields).filter((Alcohol) => Alcohol[0].endsWith('-Alcohol'))
+                    let mapedAlcohol = await useService.recordMenuMeals(allAlcohol, 'allAlcohol', 'drink')
+                    mapedAlcohol = mapedAlcohol.filter(el => el)
+
+                    const allSoft = Object.entries(fields).filter((Soft) => Soft[0].endsWith('-Soft'))
+                    let mapedSoft = await useService.recordMenuMeals(allSoft, 'allSoft', 'drink')
+                    mapedSoft = mapedSoft.filter(el => el)
+                    
+
+                    let newEvent = new Event({
+                        title: fields.title,
+                        imageUrl: imgsNewPaths[0],
+                        hints: fields.hints,
+                        locations: fields.locations,
+                        guests: [],
+                        salads: mapedSalads,
+                        appetizers: mapedAppetizer,
+                        mains: mapedMain,
+                        afterMeals: mapedAfter,
+                        alcohols: mapedAlcohol,
+                        softs: mapedSoft,
+                    })
+
+                    await newEvent.save()
+                    user.events.push(newEvent)
+                    await user.save()
+
+                    res.status(200)
+                    res.json(newEvent)
+
+                }
+
+                RecordINDataBase()
             })
-            res.json({yes:"ok"})
+
+
         }
-        res.json({err:"no"})
+        else {
+            res.status(401) // unauthorized
+        }
 
     }
     catch (err) {
-        console(err)
+        console(err.message)
     }
 
 }
