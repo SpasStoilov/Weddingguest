@@ -1,6 +1,6 @@
 import { useParams } from "react-router-dom"
 import { useContext } from "react"
-import { WeddingEventsContext } from "./MyEvents"
+import { WeddingEventsContext } from "./Main"
 
 export function HeadEvent (){
     

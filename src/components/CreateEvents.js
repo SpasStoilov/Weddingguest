@@ -75,6 +75,7 @@ export function CreateEvents() {
         try{
             let response = await fetchME("POST", path, payload, localStorage.getItem('user'), true)
             if (response.status === 401){
+                localStorage.clear()
                 window.location.replace('/login')
             }
             else {

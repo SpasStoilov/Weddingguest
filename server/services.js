@@ -6,7 +6,7 @@ const Main = require("./models/mains.js")
 const Salad = require("./models/salads")
 const Soft = require("./models/softs.js")
 
-function appendImgInStaticUploads(files, imgsNewPaths) {
+async function appendImgInStaticUploads(files, imgsNewPaths) {
     for (let Img of Object.keys(files)){
 
         const originalName = files[Img].originalFilename;
@@ -19,9 +19,9 @@ function appendImgInStaticUploads(files, imgsNewPaths) {
             
             const newPath = './static/useruploads/'+ `ID-${ID}-end$` + originalName;
             const reducedNewPath = 'http://localhost:3030/useruploads/'+ `ID-${ID}-end$` + originalName;
-
+            
             try {
-                fs.copyFile(oldPath, newPath);
+                await fs.copyFile(oldPath, newPath);
                 imgsNewPaths.push(reducedNewPath);
             } catch (err) {
                 console.log(err.message);
@@ -31,10 +31,6 @@ function appendImgInStaticUploads(files, imgsNewPaths) {
 
     };
 }
-
-
-
-
 
 function recordMenuMeals(mealList, guideMark, drink=false){
 
@@ -78,10 +74,80 @@ function recordMenuMeals(mealList, guideMark, drink=false){
 
 }
 
+async function deleteOldEventPicture(imageOldUrl){
+    
+    const cutStartIndex = ('http://localhost:3030/').length
+    const path = imageOldUrl.slice(cutStartIndex)
+    console.log('Delete Event Img on path: ', path)
+    try {
+        await fs.unlink(`./static/${path}`)
+    }
+    catch (err){
+        console.log(err.message)
+    }
+    
+}
+
+function getMenueFromForm(fields){
+    
+    const allSalads = Object.entries(fields).filter((Salad) => Salad[0].endsWith('-Salad') || Salad[0].endsWith('-Salad-recepie'))
+    
+    const allAppetizer = Object.entries(fields).filter((Appetizer) => Appetizer[0].endsWith('-Appetizer') || Appetizer[0].endsWith('-Appetizer-recepie'))
+    
+
+    const allMain = Object.entries(fields).filter((Main) => Main[0].endsWith('-Main') || Main[0].endsWith('-Main-recepie'))
+    
+
+    const allAfter = Object.entries(fields).filter((After) => After[0].endsWith('-After') || After[0].endsWith('-After-recepie'))
+    
+    const allAlcohol = Object.entries(fields).filter((Alcohol) => Alcohol[0].endsWith('-Alcohol'))
+    
+    const allSoft = Object.entries(fields).filter((Soft) => Soft[0].endsWith('-Soft'))
+    
+    return [allSalads, allAppetizer, allMain, allAfter, allAlcohol, allSoft]
+    
+}
+
+function getMenueClientDataWithID(fields){
+
+    const allSalads = Object.entries(fields).filter(
+        (Salad) => Salad[0].endsWith('-Salad') || Salad[0].endsWith('-Salad-recepie') || 
+        Salad[0].endsWith('-Salad-ID')
+    )
+
+    const allAppetizer = Object.entries(fields).filter(
+        (Appetizer) => Appetizer[0].endsWith('-Appetizer') || Appetizer[0].endsWith('-Appetizer-recepie') || Appetizer[0].endsWith('-Appetizer-ID')
+    )
+    
+
+    const allMain = Object.entries(fields).filter(
+        (Main) => Main[0].endsWith('-Main') || Main[0].endsWith('-Main-recepie') || 
+        Main[0].endsWith('-Main-ID')
+    )
+    
+
+    const allAfter = Object.entries(fields).filter(
+        (After) => After[0].endsWith('-After') || After[0].endsWith('-After-recepie') || 
+        After[0].endsWith('-After-ID')
+    )
+    
+    const allAlcohol = Object.entries(fields).filter(
+        (Alcohol) => Alcohol[0].endsWith('-Alcohol') || Alcohol[0].endsWith('-Alcohol-ID')
+    )
+    
+    const allSoft = Object.entries(fields).filter(
+        (Soft) => Soft[0].endsWith('-Soft') || Soft[0].endsWith('-Soft-ID')
+    )
+    
+    return [allSalads, allAppetizer, allMain, allAfter, allAlcohol, allSoft]
+}
 
 const useService = {
     appendImgInStaticUploads,
-    recordMenuMeals
+    recordMenuMeals,
+    deleteOldEventPicture,
+    getMenueFromForm,
+    getMenueClientDataWithID
 }
 
 module.exports = useService

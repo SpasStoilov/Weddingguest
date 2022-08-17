@@ -1,26 +1,54 @@
 import { Link, Outlet } from 'react-router-dom'
 import { useParams } from "react-router-dom"
 import { useContext} from 'react'
-import { WeddingEventsContext } from './MyEvents'
-// import { FormEffect } from '../FormEffect'
-
+import { WeddingEventsContext } from './Main'
+import { fetchME } from '../fetchMe'
 
 
 export function EventDetails() {
     
     let eventID = useParams().eventId
-    // const path = `user/events/update?eventId=${eventID}`
+    const path = `/user/events/update/${eventID}`
     let allEvents = useContext(WeddingEventsContext)
-    let concreteEvent = allEvents.filter(evn => evn._id === eventID)[0]
+    
+    console.log(allEvents)
 
-    // useEffect(() => {
-    //     let [cleaner, data] = FormEffect(".event-detail-conteiner", "PUT", path, "!someTokenHere")
-    //     console.log(data)
-    //     return cleaner
-    // }, [])
+    let concreteEvent = allEvents.filter(evn => evn._id === eventID)[0]
+    // let saladsIds = concreteEvent.salads.map(obj => obj._id)
+    // let appetizersIds = concreteEvent.appetizers.map(obj => obj._id)
+    // let mainsIds = concreteEvent.mains.map(obj => obj._id)
+    // let afterMealsIds = concreteEvent.afterMeals.map(obj => obj._id)
+    // let alcoholsIds = concreteEvent.alcohols.map(obj => obj._id)
+    // let softsIds = concreteEvent.softs.map(obj => obj._id)
+    // let menuIDS = {
+    //     saladsIds,
+    //     appetizersIds,
+    //     mainsIds,
+    //     afterMealsIds,
+    //     alcoholsIds,
+    //     softsIds
+    // }
+    
+    async function OnSub(e){
+        e.preventDefault();
+        let payload = new FormData(e.currentTarget)
+        console.log('Payload:', payload)
+        // payload.menuIDS = menuIDS
+
+        try {
+            let response = await fetchME("POST", path, payload, localStorage.getItem('user'), true)
+            console.log(response)
+
+            //redirect to /myevents
+        }
+        catch (err){
+            console.log(err.message)
+        }
+        
+    }
 
     return (
-        <form className="event-detail-conteiner" >
+        <form className="event-detail-conteiner" onSubmit={OnSub}>
             
             <div className="event-detail-head">
                 <div className="event-detail-head-img">

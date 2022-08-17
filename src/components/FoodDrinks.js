@@ -1,6 +1,6 @@
 import { useParams } from "react-router-dom"
 import { useState, useContext } from "react"
-import { WeddingEventsContext } from "./MyEvents"
+import { WeddingEventsContext } from "./Main"
 
 export function MultiCard(props){
 
@@ -32,7 +32,7 @@ export function MultiCard(props){
             recepie = ''
         }
 
-        newList.push({_id: newId, title: newId, recepie, vote: '0'})
+        newList.push({_id: newId, title: newId, recepie, vote: []})
         props.inMenu.editThem(newList)
     }
 
@@ -43,7 +43,10 @@ export function MultiCard(props){
             { 
                 props.recepie && <textarea name={props.title + props.flagType + "-recepie"} defaultValue={props.recepie}></textarea>
             }
-            <h4>Guests Vote: {props.vote}</h4>
+
+            <input type="hidden" name={props.title + props.flagType + '-ID'} defaultValue={props._id}/>
+
+            <h4>Guests Vote: {props.vote.length}</h4>
             <div className="event-meals-types-actions">
                 <button className="event-detail-body-actions-delete" onClick={onDelete}>Delete</button>
                 <button className="event-detail-body-actions-add" onClick={onAdd}>Add</button>
@@ -59,7 +62,7 @@ export function FoodDrinks(){
     let allEvents = useContext(WeddingEventsContext)
     let concreteEvent = allEvents.filter(evn => evn._id === eventID)[0]
 
-    console.log(allEvents)
+    console.log(concreteEvent)
 
     let [saladList, editSaladList] = useState(concreteEvent.salads)
     let [appetizerList, editAppetizerList] = useState(concreteEvent.appetizers)
@@ -95,7 +98,7 @@ export function FoodDrinks(){
                             <h1>{getMe.Title}</h1>
                             <div className={getMe.NameOfClass}>
                                 {   
-                                    getMe.listItems.map(obj => <MultiCard key={obj._id} title={obj.title} vote={obj.vote} inMenu={getMe.Editor} recepie={obj.recepie} flagType={getMe.Flag} mark={getMe.Mark}/>)
+                                    getMe.listItems.map(obj => <MultiCard key={obj._id} _id={obj._id} title={obj.title} vote={obj.vote} inMenu={getMe.Editor} recepie={obj.recepie} flagType={getMe.Flag} mark={getMe.Mark}/>)
                                 }
 
                             </div>

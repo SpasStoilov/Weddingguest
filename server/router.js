@@ -1,6 +1,21 @@
 const { body } = require('express-validator');
 const useHandler = require("./handlers.js");
 
+// localMidds:
+// function XAuth (req, res, next){
+
+//     if (!req.headers['X-Authorization'] || req.headers['X-Authorization'] === "empty"){
+//         console.log(req.headers['X-Authorization'])
+//         res.status(401)
+//         res.send("Unauthorized behavior!")
+//         res.end()
+//     }
+//     else {
+//         next()
+//     }
+    
+// }
+//----------------------------------------------------------------------------------------
 
 function router(server){
     
@@ -29,9 +44,8 @@ function router(server){
     )
 
     server.get('/user/events', useHandler.Events)
-
     server.post('/user/events/create', useHandler.CreateEvent)
-    server.post('/user/events/:queryParams', useHandler.UpdateEvent)
+    server.post('/user/events/update/:eventId', useHandler.UpdateEvent)
 }
 
 module.exports = router
