@@ -31,7 +31,7 @@ export function Main() {
                         window.location.replace('/login')
                     }
                     else if (response.status === 204){
-                        return {}
+                        return ""
                     }
                     else {
                         return response.json()
@@ -39,7 +39,7 @@ export function Main() {
                 })
                 .then(events => { 
                     console.log(events)
-                    changeEvents([...events])
+                    changeEvents(events)
                 })
                 .catch(err => console.log(err))
         }

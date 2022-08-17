@@ -7,6 +7,7 @@ const Salad = require("./models/salads")
 const Soft = require("./models/softs.js")
 
 async function appendImgInStaticUploads(files, imgsNewPaths) {
+
     for (let Img of Object.keys(files)){
 
         const originalName = files[Img].originalFilename;
@@ -23,6 +24,7 @@ async function appendImgInStaticUploads(files, imgsNewPaths) {
             try {
                 await fs.copyFile(oldPath, newPath);
                 imgsNewPaths.push(reducedNewPath);
+                return imgsNewPaths
             } catch (err) {
                 console.log(err.message);
             };
@@ -31,6 +33,48 @@ async function appendImgInStaticUploads(files, imgsNewPaths) {
 
     };
 }
+
+// function recordMenuMeals(mealList, guideMark, drink=false){
+
+//     const modelsGuide = {
+//         allSalads: Salad,
+//         allAppetizer: Appeteizer,
+//         allMain: Main,
+//         allAfter: After,
+//         allAlcohol: Alcohol,
+//         allSoft: Soft,
+//     }
+    
+//     let Obj;
+    
+//     async function SaveMenu(meal, index){
+//         try {
+
+//             if (index % 2 === 0 || drink === 'drink'){
+//                 Obj = new modelsGuide[guideMark]()
+//                 Obj.title = meal[1]
+                
+//                 if (drink === 'drink'){
+//                     await Obj.save()
+//                     return Obj
+//                 }
+//             }
+//             else {
+//                 Obj.recepie = meal[1]
+//                 await Obj.save()
+//                 return Obj
+//             }
+
+//         }
+//         catch (err) {
+//             throw err
+//         }
+//     }
+
+//     let listPromise = Promise.all(mealList.map((meal, index) => SaveMenu(meal, index)))
+//     return listPromise
+
+// }
 
 function recordMenuMeals(mealList, guideMark, drink=false){
 
@@ -45,31 +89,25 @@ function recordMenuMeals(mealList, guideMark, drink=false){
     
     let Obj;
     
-    async function SaveMenu(meal, index){
-        try {
-
-            if (index % 2 === 0 || drink === 'drink'){
-                Obj = new modelsGuide[guideMark]()
-                Obj.title = meal[1]
-                
-                if (drink === 'drink'){
-                    await Obj.save()
-                    return Obj
-                }
-            }
-            else {
-                Obj.recepie = meal[1]
-                await Obj.save()
+    let listPromise = mealList.map((meal, index) => {
+        
+        if (index % 2 === 0 || drink === 'drink'){
+            Obj = new modelsGuide[guideMark]()
+            Obj.title = meal[1]
+            
+            if (drink === 'drink'){
+                Obj.save()
                 return Obj
             }
-
         }
-        catch (err) {
-            throw err
+        else {
+            Obj.recepie = meal[1]
+            Obj.save()
+            return Obj
         }
-    }
+       
+    })
 
-    let listPromise = Promise.all(mealList.map((meal, index) => SaveMenu(meal, index)))
     return listPromise
 
 }

@@ -33,8 +33,7 @@ export function EventDetails() {
         e.preventDefault();
         let payload = new FormData(e.currentTarget)
         console.log('Payload:', payload)
-        // payload.menuIDS = menuIDS
-
+        
         try {
             let response = await fetchME("POST", path, payload, localStorage.getItem('user'), true)
             console.log(response)

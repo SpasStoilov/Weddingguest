@@ -174,37 +174,50 @@ async function CreateEvent(req, res){
                 console.log('S:>>> Hand CreateEvent: FILES:', files);
                 console.log('S:>>> Hand CreateEvent: FILES Keys:', Object.keys(files));
 
-                let imgsNewPaths = []
-                useService.appendImgInStaticUploads(files, imgsNewPaths)
-    
                 async function RecordINDataBase(){
+
+                    let imgsNewPaths = []
+                    imgsNewPaths = await useService.appendImgInStaticUploads(files, imgsNewPaths)
                     
                     let [allSalads, allAppetizer, allMain, allAfter, allAlcohol, allSoft] = useService.getMenueFromForm(fields)
 
                     // const allSalads = Object.entries(fields).filter((Salad) => Salad[0].endsWith('-Salad') || Salad[0].endsWith('-Salad-recepie'))
-                    mapedSalads =  await useService.recordMenuMeals(allSalads, 'allSalads')
+                    mapedSalads =  useService.recordMenuMeals(allSalads, 'allSalads')
                     mapedSalads = mapedSalads.filter(el => el)
                 
                     // const allAppetizer = Object.entries(fields).filter((Appetizer) => Appetizer[0].endsWith('-Appetizer') || Appetizer[0].endsWith('-Appetizer-recepie'))
-                    mapedAppetizer = await useService.recordMenuMeals(allAppetizer, 'allAppetizer')
+                    mapedAppetizer = useService.recordMenuMeals(allAppetizer, 'allAppetizer')
                     mapedAppetizer = mapedAppetizer.filter(el => el)
 
                     // const allMain = Object.entries(fields).filter((Main) => Main[0].endsWith('-Main') || Main[0].endsWith('-Main-recepie'))
-                    mapedMain = await useService.recordMenuMeals(allMain, 'allMain')
+                    mapedMain = useService.recordMenuMeals(allMain, 'allMain')
                     mapedMain = mapedMain.filter(el => el)
 
                     // const allAfter = Object.entries(fields).filter((After) => After[0].endsWith('-After') || After[0].endsWith('-After-recepie'))
-                    mapedAfter = await useService.recordMenuMeals(allAfter, 'allAfter')
+                    mapedAfter = useService.recordMenuMeals(allAfter, 'allAfter')
                     mapedAfter = mapedAfter.filter(el => el)
 
                     // const allAlcohol = Object.entries(fields).filter((Alcohol) => Alcohol[0].endsWith('-Alcohol'))
-                    mapedAlcohol = await useService.recordMenuMeals(allAlcohol, 'allAlcohol', 'drink')
+                    mapedAlcohol = useService.recordMenuMeals(allAlcohol, 'allAlcohol', 'drink')
                     mapedAlcohol = mapedAlcohol.filter(el => el)
 
                     // const allSoft = Object.entries(fields).filter((Soft) => Soft[0].endsWith('-Soft'))
-                    mapedSoft = await useService.recordMenuMeals(allSoft, 'allSoft', 'drink')
+                    mapedSoft = useService.recordMenuMeals(allSoft, 'allSoft', 'drink')
                     mapedSoft = mapedSoft.filter(el => el)
                     
+                    console.log("allSalads:", allSalads)
+                    console.log("allMains:", allMain)
+                    console.log("allAppetazior:", allAppetizer)
+                    console.log("allAfter:", allAfter)
+                    console.log("allAlcohols:", allAlcohol)
+                    console.log("allSoft:", allSoft)
+
+                    console.log("mapedSalads:", mapedSalads)
+                    console.log("mapedMains:", mapedMain)
+                    console.log("mapedAppetazior:", mapedAppetizer)
+                    console.log("mapedAfter:", mapedAfter)
+                    console.log("mapedAlcohols:", mapedAlcohol)
+                    console.log("mapedSoft:", mapedSoft)
 
                     let newEvent = new Event({
                         title: fields.title,
@@ -213,12 +226,12 @@ async function CreateEvent(req, res){
                         locations: fields.locations,
                         ownerId: user._id,
                         guests: [],
-                        salads: mapedSalads,
-                        appetizers: mapedAppetizer,
-                        mains: mapedMain,
-                        afterMeals: mapedAfter,
-                        alcohols: mapedAlcohol,
-                        softs: mapedSoft,
+                        salads: [...mapedSalads],
+                        appetizers: [...mapedAppetizer],
+                        mains: [...mapedMain],
+                        afterMeals: [...mapedAfter],
+                        alcohols: [...mapedAlcohol],
+                        softs: [...mapedSoft],
                     })
 
                     await newEvent.save()
@@ -302,8 +315,12 @@ async function UpdateEvent(req, res){
 
                         if (Object.keys(files).length !== 0){
                             let imgsNewPaths = []
-                            useService.deleteOldEventPicture(eventToUpdate.imageUrl)
-                            useService.appendImgInStaticUploads(files, imgsNewPaths)
+                            if (eventToUpdate.imageUrl){
+                                await useService.deleteOldEventPicture(eventToUpdate.imageUrl)
+                            }
+
+                            imgsNewPaths = await useService.appendImgInStaticUploads(files, imgsNewPaths)
+                            console.log("New Path IMG Upate: ", imgsNewPaths[0])
                             eventToUpdate.imageUrl = imgsNewPaths[0]
                             await eventToUpdate.save();
                         }
@@ -325,118 +342,122 @@ async function UpdateEvent(req, res){
                             let [newSalads, newAppetizer, newMain, newAfter, newAlcohol, newSoft] = useService.getMenueClientDataWithID(fields) 
                             //ex: allSalads -> [[title, value], [recepie, value], [id, value]]
 
-                            let MealsMster = [
-                                [eventToUpdate.salads, newSalads],
-                                [eventToUpdate.appetizers, newAppetizer], 
-                                [eventToUpdate.mains, newMain], 
-                                [eventToUpdate.afterMeals, newAfter]
-                            ]
+                            const masterMenuFields = newSalads.concat(newAppetizer, newAppetizer, newMain, newAfter, newAlcohol, newSoft)
 
-                            let newObjToRecord = []
+                            if (masterMenuFields.length !== 0){
 
-                            for (let [EventField, listTypeOfMeals] of MealsMster){
-                                // listTypeOfDrinks -> [  [title, value], [recepie, value], [id, value], ...]
-                                
-                                for (let i=2; i < listTypeOfMeals.length; i++){
+                                let MealsMster = [
+                                    [eventToUpdate.salads, newSalads],
+                                    [eventToUpdate.appetizers, newAppetizer], 
+                                    [eventToUpdate.mains, newMain], 
+                                    [eventToUpdate.afterMeals, newAfter]
+                                ]
+
+                                let newObjToRecord = []
+
+                                for (let [EventField, listTypeOfMeals] of MealsMster){
+                                    // listTypeOfDrinks -> [  [title, value], [recepie, value], [id, value], ...]
                                     
-                                    if ((i+1) % 3 == 0){
+                                    for (let i=2; i < listTypeOfMeals.length; i++){
+                                        
+                                        if ((i+1) % 3 == 0){
 
-                                        let mealId = listTypeOfMeals[i][1]
-                                        let newRecepie = listTypeOfMeals[i-1][1]
-                                        let newTitle = listTypeOfMeals[i-2][1]
-                                        let updateThisMeal = EventField.map((obj) => obj._id === mealId)[0]
+                                            let mealId = listTypeOfMeals[i][1]
+                                            let newRecepie = listTypeOfMeals[i-1][1]
+                                            let newTitle = listTypeOfMeals[i-2][1]
+                                            let updateThisMeal = EventField.map((obj) => obj._id === mealId)[0]
 
-                                        if (!updateThisMeal) {
-                                            newObjToRecord.push(listTypeOfMeals[i-2])
-                                            newObjToRecord.push(listTypeOfMeals[i-1])
-                                            continue
+                                            if (!updateThisMeal) {
+                                                newObjToRecord.push(listTypeOfMeals[i-2])
+                                                newObjToRecord.push(listTypeOfMeals[i-1])
+                                                continue
+                                            }
+                                            
+                                            if (newTitle === updateThisMeal.title){
+                                                updateThisMeal.title = newTitle
+                                            }
+                                            if (newRecepie === updateThisMeal.recepie){
+                                                updateThisMeal.recepie = newRecepie
+                                            }
+
                                         }
                                         
-                                        if (newTitle === updateThisMeal.title){
-                                            updateThisMeal.title = newTitle
-                                        }
-                                        if (newRecepie === updateThisMeal.recepie){
-                                            updateThisMeal.recepie = newRecepie
-                                        }
-
                                     }
-                                    
                                 }
-                            }
 
-                            let DrinksMster = [
-                                [eventToUpdate.alcohols, newAlcohol], 
-                                [eventToUpdate.softs, newSoft]
-                            ]
-                            for (let [EventField, listTypeOfDrinks] of DrinksMster){
-                                
-                                for (let i=1; i < listTypeOfDrinks.length; i++){
-                                    // listTypeOfDrinks -> [  [title, value], [id, value], [title, value], [id, value] ]
+                                let DrinksMster = [
+                                    [eventToUpdate.alcohols, newAlcohol], 
+                                    [eventToUpdate.softs, newSoft]
+                                ]
+                                for (let [EventField, listTypeOfDrinks] of DrinksMster){
+                                    
+                                    for (let i=1; i < listTypeOfDrinks.length; i++){
+                                        // listTypeOfDrinks -> [  [title, value], [id, value], [title, value], [id, value] ]
 
-                                    if ((i+1) % 2 == 0){
+                                        if ((i+1) % 2 == 0){
 
-                                        let drinkId = listTypeOfDrinks[i][1]
-                                        let newTitle = listTypeOfDrinks[i-1][1]
-                                        let updateThisDrink = EventField.map((obj) => obj._id === drinkId)[0]
+                                            let drinkId = listTypeOfDrinks[i][1]
+                                            let newTitle = listTypeOfDrinks[i-1][1]
+                                            let updateThisDrink = EventField.map((obj) => obj._id === drinkId)[0]
 
-                                        if (!updateThisDrink) {
-                                            newObjToRecord.push(listTypeOfDrinks[i-1])
-                                            continue
+                                            if (!updateThisDrink) {
+                                                newObjToRecord.push(listTypeOfDrinks[i-1])
+                                                continue
+                                            }
+                                            
+                                            if (newTitle === updateThisDrink.title){
+                                                updateThisDrink.title = newTitle
+                                            }
+                                        
+
                                         }
                                         
-                                        if (newTitle === updateThisDrink.title){
-                                            updateThisDrink.title = newTitle
-                                        }
-                                       
-
                                     }
-                                    
                                 }
-                            }
 
-                            await eventToUpdate.save()
+                                await eventToUpdate.save()
 
-                            let newFields = Object.fromEntries(newObjToRecord)
+                                let newFields = Object.fromEntries(newObjToRecord)
 
-                            let [allSalads, allAppetizer, allMain, allAfter, allAlcohol, allSoft] = useService.getMenueFromForm(newFields)
+                                let [allSalads, allAppetizer, allMain, allAfter, allAlcohol, allSoft] = useService.getMenueFromForm(newFields)
 
-                            // const allSalads = Object.entries(fields).filter((Salad) => Salad[0].endsWith('-Salad') || Salad[0].endsWith('-Salad-recepie'))
-                            mapedSalads =  await useService.recordMenuMeals(allSalads, 'allSalads')
-                            mapedSalads = mapedSalads.filter(el => el)
-                        
-                            // const allAppetizer = Object.entries(fields).filter((Appetizer) => Appetizer[0].endsWith('-Appetizer') || Appetizer[0].endsWith('-Appetizer-recepie'))
-                            mapedAppetizer = await useService.recordMenuMeals(allAppetizer, 'allAppetizer')
-                            mapedAppetizer = mapedAppetizer.filter(el => el)
-
-                            // const allMain = Object.entries(fields).filter((Main) => Main[0].endsWith('-Main') || Main[0].endsWith('-Main-recepie'))
-                            mapedMain = await useService.recordMenuMeals(allMain, 'allMain')
-                            mapedMain = mapedMain.filter(el => el)
-
-                            // const allAfter = Object.entries(fields).filter((After) => After[0].endsWith('-After') || After[0].endsWith('-After-recepie'))
-                            mapedAfter = await useService.recordMenuMeals(allAfter, 'allAfter')
-                            mapedAfter = mapedAfter.filter(el => el)
-
-                            // const allAlcohol = Object.entries(fields).filter((Alcohol) => Alcohol[0].endsWith('-Alcohol'))
-                            mapedAlcohol = await useService.recordMenuMeals(allAlcohol, 'allAlcohol', 'drink')
-                            mapedAlcohol = mapedAlcohol.filter(el => el)
-
-                            // const allSoft = Object.entries(fields).filter((Soft) => Soft[0].endsWith('-Soft'))
-                            mapedSoft = await useService.recordMenuMeals(allSoft, 'allSoft', 'drink')
-                            mapedSoft = mapedSoft.filter(el => el)
+                                // const allSalads = Object.entries(fields).filter((Salad) => Salad[0].endsWith('-Salad') || Salad[0].endsWith('-Salad-recepie'))
+                                mapedSalads =  useService.recordMenuMeals(allSalads, 'allSalads')
+                                mapedSalads = mapedSalads.filter(el => el)
                             
-                    
-                            eventToUpdate.salads = eventToUpdate.salads.concat(mapedSalads)
-                            eventToUpdate.appetizers = eventToUpdate.appetizers.concat(mapedAppetizer)
-                            eventToUpdate.mains = eventToUpdate.mains.concat(mapedMain)
-                            eventToUpdate.afterMeals = eventToUpdate.afterMeals.concat(mapedAfter)
-                            eventToUpdate.alcohols = eventToUpdate.alcohols.concat(mapedAlcohol)
-                            eventToUpdate.softs = eventToUpdate.softs.concat(mapedSoft)
-                            
+                                // const allAppetizer = Object.entries(fields).filter((Appetizer) => Appetizer[0].endsWith('-Appetizer') || Appetizer[0].endsWith('-Appetizer-recepie'))
+                                mapedAppetizer = useService.recordMenuMeals(allAppetizer, 'allAppetizer')
+                                mapedAppetizer = mapedAppetizer.filter(el => el)
+
+                                // const allMain = Object.entries(fields).filter((Main) => Main[0].endsWith('-Main') || Main[0].endsWith('-Main-recepie'))
+                                mapedMain = useService.recordMenuMeals(allMain, 'allMain')
+                                mapedMain = mapedMain.filter(el => el)
+
+                                // const allAfter = Object.entries(fields).filter((After) => After[0].endsWith('-After') || After[0].endsWith('-After-recepie'))
+                                mapedAfter = useService.recordMenuMeals(allAfter, 'allAfter')
+                                mapedAfter = mapedAfter.filter(el => el)
+
+                                // const allAlcohol = Object.entries(fields).filter((Alcohol) => Alcohol[0].endsWith('-Alcohol'))
+                                mapedAlcohol = useService.recordMenuMeals(allAlcohol, 'allAlcohol', 'drink')
+                                mapedAlcohol = mapedAlcohol.filter(el => el)
+
+                                // const allSoft = Object.entries(fields).filter((Soft) => Soft[0].endsWith('-Soft'))
+                                mapedSoft = useService.recordMenuMeals(allSoft, 'allSoft', 'drink')
+                                mapedSoft = mapedSoft.filter(el => el)
+
+                                Array.prototype.push.apply(eventToUpdate.salads, mapedSalads);
+                                Array.prototype.push.apply(eventToUpdate.appetizers, mapedAppetizer);
+                                Array.prototype.push.apply(eventToUpdate.mains, mapedMain);
+                                Array.prototype.push.apply(eventToUpdate.afterMeals, mapedAfter);
+                                Array.prototype.push.apply(eventToUpdate.alcohols, mapedAlcohol);
+                                Array.prototype.push.apply(eventToUpdate.softs, mapedSoft);
         
-                            await eventToUpdate.save()
-                        
-                            res.status(200)
-                            res.json(eventToUpdate)
+                                await eventToUpdate.save()
+                            
+                                res.status(200)
+                                res.json(eventToUpdate)
+
+                            }
                             
                         }
                         else {
@@ -450,7 +471,7 @@ async function UpdateEvent(req, res){
                     Update()
                     
                 })
-                
+
             }
 
         }

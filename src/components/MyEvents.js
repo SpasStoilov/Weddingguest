@@ -23,7 +23,9 @@ export function MyEvents() {
         <div className="event-root-container">
             { allEvents
                 ? allEvents.map(event => <EventCard key={event._id} event={event}/>)
-                : <h1>Loading Events...</h1>
+                :<>
+                    <h1>No Event's to show: <Link to='/createevents'>Create Event</Link></h1>
+                </>
             }
         </div>
     );
