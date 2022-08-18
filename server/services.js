@@ -89,7 +89,7 @@ function recordMenuMeals(mealList, guideMark, drink=false){
     
     let Obj;
     
-    let listPromise = mealList.map((meal, index) => {
+    let listNewMeals = mealList.map((meal, index) => {
         
         if (index % 2 === 0 || drink === 'drink'){
             Obj = new modelsGuide[guideMark]()
@@ -106,10 +106,9 @@ function recordMenuMeals(mealList, guideMark, drink=false){
             return Obj
         }
        
-    })
+    }).filter(el => el)
 
-    return listPromise
-
+    return listNewMeals
 }
 
 async function deleteOldEventPicture(imageOldUrl){
@@ -118,15 +117,17 @@ async function deleteOldEventPicture(imageOldUrl){
     const path = imageOldUrl.slice(cutStartIndex)
     console.log('Delete Event Img on path: ', path)
     try {
-        await fs.unlink(`./static/${path}`)
+        await fs.unlink(`/Js/react-demo/server/static/${path}`)
     }
     catch (err){
         console.log(err.message)
     }
-    
+ 
 }
 
 function getMenueFromForm(fields){
+
+    console.log(Object.entries(fields))
     
     const allSalads = Object.entries(fields).filter((Salad) => Salad[0].endsWith('-Salad') || Salad[0].endsWith('-Salad-recepie'))
     
@@ -180,12 +181,58 @@ function getMenueClientDataWithID(fields){
     return [allSalads, allAppetizer, allMain, allAfter, allAlcohol, allSoft]
 }
 
+async function DeleteMealFromDataBase(ID, Type){
+
+    const dict = {
+        'After': After, 
+        'Alcohol': Alcohol,
+        'Appeteizer': Appeteizer, 
+        'Main': Main,
+        'Salad': Salad,
+        'Soft': Soft, 
+    }
+
+
+    try {
+        console.log(`DELETE FROM THIS TYPE - ${Type}:`, dict[Type])
+        await dict[Type].deleteOne({_id: ID})
+    }
+    catch (err){
+        console.log(err.message)
+    }
+
+}
+
+
+function AppendMealInEvent(ALL, Event){
+
+    const dict = {
+        'afters': Event.afterMeals, 
+        'alcohols': Event.alcohols,
+        'appetizers': Event.appetizers, 
+        'mains': Event.mains,
+        'salads': Event.salads,
+        'softs': Event.softs, 
+    }
+
+
+    for (let [ListObj, Type] of ALL){
+
+        for(let obj of ListObj){
+            dict[Type].push(obj)
+        }
+    }
+ 
+}
+
 const useService = {
     appendImgInStaticUploads,
     recordMenuMeals,
     deleteOldEventPicture,
     getMenueFromForm,
-    getMenueClientDataWithID
+    getMenueClientDataWithID,
+    DeleteMealFromDataBase,
+    AppendMealInEvent
 }
 
 module.exports = useService

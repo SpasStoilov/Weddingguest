@@ -20,13 +20,16 @@ export function MultiCard(props){
     function onAdd(e) {
         e.preventDefault();
 
-        let lastSaladInList = newList[newList.length - 1]
-        let newId = `${props.mark}-0`;
+        let lastInList = newList[newList.length - 1]
+        let beforelastInList = newList[newList.length - 2]
+        let newId = `${props.mark}-1`;
         let recepie = 'Recepie here...'
 
-        if (lastSaladInList._id.startsWith(`${props.mark}-`)){
-            newId = props.mark + '-' + (Number(lastSaladInList._id.slice(2)) + 1)
+        if (lastInList._id.startsWith(`${props.mark}-`)){
 
+            let idNum = Number(lastInList._id.slice(2))
+            newId = props.mark + '-' + (idNum + 1)
+            
         }
         if (props.mark === 'F' || props.mark === "L"){
             recepie = ''

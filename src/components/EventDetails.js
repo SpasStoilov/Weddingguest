@@ -14,20 +14,6 @@ export function EventDetails() {
     console.log(allEvents)
 
     let concreteEvent = allEvents.filter(evn => evn._id === eventID)[0]
-    // let saladsIds = concreteEvent.salads.map(obj => obj._id)
-    // let appetizersIds = concreteEvent.appetizers.map(obj => obj._id)
-    // let mainsIds = concreteEvent.mains.map(obj => obj._id)
-    // let afterMealsIds = concreteEvent.afterMeals.map(obj => obj._id)
-    // let alcoholsIds = concreteEvent.alcohols.map(obj => obj._id)
-    // let softsIds = concreteEvent.softs.map(obj => obj._id)
-    // let menuIDS = {
-    //     saladsIds,
-    //     appetizersIds,
-    //     mainsIds,
-    //     afterMealsIds,
-    //     alcoholsIds,
-    //     softsIds
-    // }
     
     async function OnSub(e){
         e.preventDefault();
@@ -37,8 +23,12 @@ export function EventDetails() {
         try {
             let response = await fetchME("POST", path, payload, localStorage.getItem('user'), true)
             console.log(response)
-
-            //redirect to /myevents
+            if (response.status === 401){
+                localStorage.clear();
+                window.location.replace('/login');
+            }
+            window.location.replace('/myevents');
+            
         }
         catch (err){
             console.log(err.message)
