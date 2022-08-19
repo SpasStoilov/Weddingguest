@@ -46,6 +46,7 @@ function router(server){
     server.get('/user/events', useHandler.Events)
     server.post('/user/events/create', useHandler.CreateEvent)
     server.post('/user/events/update/:eventId', useHandler.UpdateEvent)
+    server.delete('/user/events/update/:eventId', useHandler.DeleteEvent)
 }
 
 module.exports = router

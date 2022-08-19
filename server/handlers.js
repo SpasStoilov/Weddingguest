@@ -244,11 +244,11 @@ async function CreateEvent(req, res){
 
 async function UpdateEvent(req, res){
 
-    console.log("Hand UpdateEvent REQ.params.eventId:", req.headers['X-Authorization'])
+    console.log("Hand UpdateEvent X-Authorization:", req.headers['x-authorization'])
 
     try {
 
-        let isUserValid = await User.findOne(req.headers['X-Authorization'])
+        let isUserValid = await User.findOne({accessToken:req.headers['x-authorization']})
         
         if (isUserValid){
 
@@ -563,13 +563,85 @@ async function UpdateEvent(req, res){
     
 }
 
+async function DeleteEvent(req, res){
+    
+    console.log("Hand DELETEvent X-Authorization:", req.headers['x-authorization'])
+    
+    try {
+        
+        let isUserValid = await User.findOne({accessToken: req.headers['x-authorization']}).populate('events')
+        
+        if (isUserValid){
+
+            let eventToDELETE = await Event.findById(req.params.eventId)
+                .populate("guests")
+                .populate({
+                    path: "salads",
+                    populate: 'vote'
+                })
+                .populate({
+                    path: "appetizers",
+                    populate: 'vote'
+                })
+                .populate({
+                    path: "mains",
+                    populate: 'vote'
+                })
+                .populate({
+                    path: "afterMeals",
+                    populate: 'vote'
+                })
+                .populate({
+                    path: "alcohols",
+                    populate: 'vote'
+                })
+                .populate({
+                    path: "softs",
+                    populate: 'vote'
+                })
+
+            const listsOfObjToDelete = [
+                [eventToDELETE.afterMeals, 'After'], 
+                [eventToDELETE.alcohols, 'Alcohol'],
+                [eventToDELETE.appetizers, 'Appeteizer'], 
+                [eventToDELETE.mains, 'Main'],
+                [eventToDELETE.salads, 'Salad'],
+                [eventToDELETE.softs, 'Soft'],
+                // eventToDELETE.guests, 
+            ]
+
+            if (eventToDELETE.imageUrl){
+                await useService.deleteOldEventPicture(eventToDELETE.imageUrl)
+            }
+
+            for (let [list, Type] of listsOfObjToDelete){
+                for (let obj of list){
+                    console.log(`Obj.id: ${obj._id} - Type: ${Type}`)
+                    useService.DeleteMealFromDataBase(obj._id, Type)
+                }
+            }
+
+            let indexToDel = isUserValid.events.indexOf(eventToDELETE)
+            isUserValid.events.splice(indexToDel, 1)
+            await isUserValid.save()
+            
+            await Event.deleteOne({_id: eventToDELETE._id})
+            res.status(200)
+            res.end()
+        }
+    }
+    catch(err){
+        console.log(err)
+    }
+}
 
 let useHandler = {
     Register,
     Login,
     CreateEvent,
     UpdateEvent,
-    Events
+    Events,
+    DeleteEvent
 }
 
 module.exports = useHandler;

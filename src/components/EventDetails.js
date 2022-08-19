@@ -8,20 +8,39 @@ import { fetchME } from '../fetchMe'
 export function EventDetails() {
     
     let eventID = useParams().eventId
-    const path = `/user/events/update/${eventID}`
     let allEvents = useContext(WeddingEventsContext)
-    
+    const path = `/user/events/update/${eventID}`
+
     console.log(allEvents)
 
     let concreteEvent = allEvents.filter(evn => evn._id === eventID)[0]
-    
+
+    async function OnDelete(e){
+        e.preventDefault();
+        
+        try {
+            let response = await fetchME("DELETE", path, {}, localStorage.getItem('user'), true)
+            console.log(response)
+            if (response.status === 401){
+                localStorage.clear();
+                window.location.replace('/login');
+            }
+            window.location.replace('/myevents');
+            
+        }
+        catch (err){
+            console.log(err.message)
+        }
+        
+    }
+
     async function OnSub(e){
         e.preventDefault();
         let payload = new FormData(e.currentTarget)
         console.log('Payload:', payload)
-        
+
         try {
-            let response = await fetchME("POST", path, payload, localStorage.getItem('user'), true)
+            let response = await fetchME('POST', path, payload, localStorage.getItem('user'), true)
             console.log(response)
             if (response.status === 401){
                 localStorage.clear();
@@ -63,8 +82,8 @@ export function EventDetails() {
             </div>
 
             <div className="event-detail-body-actions">
-                <input type="submit" className="event-detail-actions-save" defaultValue="Save"/>
-                <input type="click" className="event-detail-actions-delete" defaultValue="Delete"/>
+                <input type="submit" className="event-detail-actions-save"  value='Update'/>
+                <input type="button" className="event-detail-actions-delete" defaultValue='Delete' onClick={OnDelete}/>
             </div>
 
         </form>

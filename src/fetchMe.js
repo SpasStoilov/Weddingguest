@@ -57,15 +57,15 @@ export async function fetchME(method, path, payload={}, token=null, flag=false){
             }
         }
 
-        let DATA = {
+        payload = {
             method,
             headers,
             body: flag ? payload : JSON.stringify(payload)
         }
-        payload = DATA
     }
-    else if (method === "GET"){
+    else if (method === "GET" || method === "DELETE"){
         payload = {
+            method,
             headers: {'x-authorization': auth}
         }
     }
