@@ -43,6 +43,8 @@ function router(server){
         useHandler.Login
     )
 
+    server.post('/event/vote/:eventId', useHandler.AppendVote)
+    server.get('/event/:eventId', useHandler.GetEvent)
     server.get('/user/events', useHandler.Events)
     server.post('/user/events/create', useHandler.CreateEvent)
     server.post('/user/events/update/:eventId', useHandler.UpdateEvent)

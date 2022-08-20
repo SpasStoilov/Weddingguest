@@ -10,6 +10,7 @@ import { FoodDrinks } from './FoodDrinks';
 import { Locations } from './Locations';
 import { GuestsHints } from './GuestsHints';
 import { Guests } from './Guests';
+import { EventGuestView } from './EventGuestView';
 import { HeadEvent } from './HeadEvent';
 import React, { useEffect, useState } from 'react';
 import { fetchME } from '../fetchMe';
@@ -52,9 +53,10 @@ export function Main() {
             <main>
                 <Routes>
                     { !localStorage.getItem('user')
-                        ?<>
+                        ? <>
                             <Route path='/register' element={<Register/>}/>
                             <Route path='/login' element={<LogIn/>}/>
+                            {/* <Route path='/goodjob' element={<GoodJob/>}/> */}
                         </>
 
                         :<>
@@ -73,6 +75,7 @@ export function Main() {
                         </>
                     }
 
+                    <Route path='/event/:eventId' element={<EventGuestView/>}/>
                     <Route path='/*' element={<Page404/>}/>
 
                 </Routes>

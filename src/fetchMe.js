@@ -28,6 +28,16 @@ function Validator(path, payload){
         }
        
     }
+    else if (path.startsWith('/event/vote/')){
+
+        if (!payload.email){
+            alert('Email is empty!')
+        }
+        else if (!payload.guestName){
+            alert('First and Last name is empty!')
+        }
+       
+    }
     return payload
 }
 

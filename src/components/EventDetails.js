@@ -65,7 +65,7 @@ export function EventDetails() {
                 <div className="event-detail-head-headers">
                     <h2 className="event-detail-head-headers-title">{concreteEvent.title}</h2>
                     <h3 className="event-detail-head-headers-guest">Total Guests: {`${concreteEvent.guests.length}`}</h3>
-                    <h3 className="event-detail-head-headers-link">Share: {`weddingguest.com/event?ID=${concreteEvent._id}`}</h3>
+                    <h3 className="event-detail-head-headers-link">Share: {`http://localhost:3000/event/${concreteEvent._id}`}</h3>
                 </div>
             </div>
 

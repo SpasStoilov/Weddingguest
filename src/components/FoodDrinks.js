@@ -21,7 +21,7 @@ export function MultiCard(props){
         e.preventDefault();
 
         let lastInList = newList[newList.length - 1]
-        let beforelastInList = newList[newList.length - 2]
+        // let beforelastInList = newList[newList.length - 2]
         let newId = `${props.mark}-1`;
         let recepie = 'Recepie here...'
 

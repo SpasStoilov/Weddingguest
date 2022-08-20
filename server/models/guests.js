@@ -3,7 +3,8 @@ let  {Schema, model} = require("mongoose")
 
 let guestSchema = new Schema({
     name: String, 
-    email: Number,
+    email: String,
+    accessToken: String
 })
 
 

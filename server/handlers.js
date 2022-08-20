@@ -10,7 +10,6 @@ const Salad = require("./models/salads.js")
 
 const saltRounds = 10;
 
-
 async function Register(req, res){
     console.log("Hand Register REQ.body:", req.body)
     let result = validationResult(req)
@@ -624,7 +623,7 @@ async function DeleteEvent(req, res){
             let indexToDel = isUserValid.events.indexOf(eventToDELETE)
             isUserValid.events.splice(indexToDel, 1)
             await isUserValid.save()
-            
+
             await Event.deleteOne({_id: eventToDELETE._id})
             res.status(200)
             res.end()
@@ -635,13 +634,229 @@ async function DeleteEvent(req, res){
     }
 }
 
+async function GetEvent(req, res){
+    
+    console.log("Hand Get Event ID:", req.params.eventId)
+    
+    try {
+
+        let eventToExtract = await Event.findById(req.params.eventId)
+            .populate("guests")
+            .populate({
+                path: "salads",
+                populate: 'vote'
+            })
+            .populate({
+                path: "appetizers",
+                populate: 'vote'
+            })
+            .populate({
+                path: "mains",
+                populate: 'vote'
+            })
+            .populate({
+                path: "afterMeals",
+                populate: 'vote'
+            })
+            .populate({
+                path: "alcohols",
+                populate: 'vote'
+            })
+            .populate({
+                path: "softs",
+                populate: 'vote'
+            })
+        
+        if (eventToExtract) {
+            res.status(302) // found
+            res.json(eventToExtract)
+        }
+        else {
+            throw new Error("Event was not Found!")
+        }
+ 
+    }
+    catch(err){
+        console.log(err.message)
+        res.status(404)
+        res.end()
+    }
+}
+
+async function AppendVote(req, res){
+    
+    console.log("Hand AppendVote Event Id:", req.params.eventId)
+    console.log("Hand AppendVote Req.body:", req.body)
+    console.log("Hand AppendVote req.headers['x-authorization']:", req.headers['x-authorization'])
+
+    try {
+
+    
+        let eventToVote = await Event.findById(req.params.eventId)
+            .populate("guests")
+            .populate({
+                path: "salads",
+                populate: 'vote'
+            })
+            .populate({
+                path: "appetizers",
+                populate: 'vote'
+            })
+            .populate({
+                path: "mains",
+                populate: 'vote'
+            })
+            .populate({
+                path: "afterMeals",
+                populate: 'vote'
+            })
+            .populate({
+                path: "alcohols",
+                populate: 'vote'
+            })
+            .populate({
+                path: "softs",
+                populate: 'vote'
+            })
+
+        if (!eventToVote){
+            throw new Error('Event is not Found!')
+        }
+
+        let isGuestValid = await Guest.findOne({accessToken: req.headers['x-authorization']})
+
+        if (!isGuestValid){
+
+            const accessToken = await bcrypt.hash(req.body.email, saltRounds);
+
+            let newGuest = new Guest({
+                name: req.body.guestName,
+                email: req.body.email,
+                accessToken
+            })
+
+            await newGuest.save()
+            isGuestValid = newGuest
+            console.log("New Guest is Made:", isGuestValid)
+        }
+        
+        console.log("eventToVote.guests:", eventToVote.guests)
+        console.log("isGuestValid._id:", isGuestValid._id)
+
+        const isInEvent = eventToVote.guests.filter(obj => obj._id.equals(isGuestValid._id))[0]
+        console.log("isInEvent:", isInEvent)
+
+        if (!isInEvent){
+            eventToVote.guests.push(isGuestValid)
+            await eventToVote.save()
+            console.log("Append new Guest to event:", eventToVote.guests)
+        }
+
+        const DICTMENU = {
+            'afterMeals': eventToVote.afterMeals, 
+            'appetizers': eventToVote.appetizers, 
+            'mains': eventToVote.mains,
+            'salads': eventToVote.salads,
+            'alcohols': eventToVote.alcohols,
+            'softs': eventToVote.softs,
+        }
+
+        const listOfreqBodyValues = Object.values(req.body)
+
+        for (let [fieldName, fieldValue] of Object.entries(req.body)){
+
+            if (fieldName == "email" || fieldName == "guestName"){
+                continue
+            }
+
+            let pattern = /(?<=-)[a-z M]+$/
+            let patternIdDrink = /^\w+(?=-[a-z M]+$)/
+
+            let matchDrinkId = fieldName.match(patternIdDrink)
+            let matchMealType = fieldName.match(pattern)
+
+            let listMeals;
+          
+            let idDrink = matchDrinkId ? matchDrinkId[0] : false
+
+            if (matchMealType){
+                let Type = matchMealType[0]
+                listMeals = DICTMENU[Type]
+            }
+
+            console.log("Vote listMeals: ", listMeals)
+            console.log("Vote idDrink: ", idDrink)
+           
+            if (listMeals){
+
+                // if titles are unique no probllem
+                await Promise.all(listMeals.map(async function(obj){
+
+                    console.log("TITLE:", obj.title)
+
+                    let votes = obj.vote
+                    const isGuestVoted = votes.filter(obj => obj._id.equals(isGuestValid._id))[0]
+
+                    let ruleOne = !idDrink 
+                        ? obj.title == fieldValue && !isGuestVoted 
+                        : obj._id.toString() == idDrink && !isGuestVoted
+
+                    let ruleTwo = !idDrink 
+                        ? obj.title != fieldValue && isGuestVoted
+                        : obj._id.toString() != idDrink && !listOfreqBodyValues.includes(obj.title) && isGuestVoted
+                    
+                    console.log("obj.title", obj.title)
+                    console.log("listOfreqBodyValues", listOfreqBodyValues)
+                    console.log("!listOfreqBodyValues.includes(obj.title)", !listOfreqBodyValues.includes(obj.title))
+                    console.log("obj._id.toString() != idDrink", obj._id.toString() != idDrink)
+                    console.log("1:", ruleOne)
+                    console.log("2:", ruleTwo)
+                    
+                    if (ruleOne){
+                        votes.push(isGuestValid)
+                        console.log("New votes after push:", votes)
+                    }
+                    else if (ruleTwo){
+                        const indexG = votes.filter((obj, index) => {
+                            if(obj._id.equals(isGuestValid._id)){
+                                return index
+                            }
+                        })[0]
+
+                        console.log("Index Of meal to del:", indexG)
+                        votes.splice(indexG, 1) 
+                        console.log("New votes after del:", votes)
+                    }
+
+                    return await obj.save()
+                    
+                }))
+                
+            }
+
+        }
+
+        await eventToVote.save()
+        res.json(isGuestValid)
+
+    }
+    catch (err) {
+        console.log(err)
+        res.status(404)
+        res.json({message: err.message})
+    }
+
+}
+
 let useHandler = {
     Register,
     Login,
     CreateEvent,
     UpdateEvent,
     Events,
-    DeleteEvent
+    DeleteEvent,
+    GetEvent,
+    AppendVote
 }
 
 module.exports = useHandler;
