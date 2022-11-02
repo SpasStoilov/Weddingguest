@@ -85,7 +85,9 @@ async function Login(req, res){
    
     }
     catch (err) {
-        console.log(err)
+        console.log("ERROR: ", err)
+        res.status(404)
+        res.json({message:err.message})
     }
         
 }

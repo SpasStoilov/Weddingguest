@@ -82,9 +82,10 @@ export async function fetchME(method, path, payload={}, token=null, flag=false){
 
     console.log("Fetch Peayload: ", payload)
     console.log("Fetch Path: ", `${baseURL}${path}`)
+
     let response = await fetch(`${baseURL}${path}`, payload)
 
-    if (!response.status === 404) {
+    if (response.status == 404) {
         let statusErr = await response.json()
         throw new Error(statusErr.message)
     }

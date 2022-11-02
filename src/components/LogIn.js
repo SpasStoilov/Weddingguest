@@ -37,7 +37,8 @@ export function LogIn() {
             }
         }
         catch (err){
-            console.log(err.message)
+            //console.log(err.message)
+            window.location.replace('/register')
         }
         
     }
